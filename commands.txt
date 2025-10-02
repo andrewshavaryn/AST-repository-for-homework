@@ -1,0 +1,68 @@
+=== Основні команди Playwright ===
+
+# Встановлення Playwright
+npm init playwright@latest
+npx playwright install
+
+# Встановлення конкретного браузера
+npx playwright install chromium
+npx playwright install firefox
+npx playwright install webkit
+
+# Запуск тестів
+npx playwright test
+
+# Запуск конкретного файлу
+npx playwright test example.spec.ts
+
+# Запуск у headed режимі (з відкритим браузером)
+npx playwright test --headed
+
+# Запуск у конкретному браузері
+npx playwright test --project=chromium
+npx playwright test --project=firefox
+npx playwright test --project=webkit
+
+# Запуск у debug режимі
+npx playwright test --debug
+
+# Запуск конкретного тесту за назвою
+npx playwright test -g "test name"
+
+# UI Mode (інтерактивний режим)
+npx playwright test --ui
+
+# Показати звіт
+npx playwright show-report
+
+# Codegen - генератор тестів
+npx playwright codegen
+npx playwright codegen https://example.com
+
+# Trace viewer
+npx playwright show-trace trace.zip
+
+# Оновлення Playwright
+npm install -D @playwright/test@latest
+npx playwright install
+
+# Перевірка версії
+npx playwright --version
+
+# Запуск тестів у parallel
+npx playwright test --workers=4
+
+# Запуск тестів у одному worker (послідовно)
+npx playwright test --workers=1
+
+# Retry failed tests
+npx playwright test --retries=2
+
+# Запуск лише failed тестів
+npx playwright test --last-failed
+
+# Створити HTML звіт
+npx playwright test --reporter=html
+
+# Очистити кеш браузерів
+npx playwright uninstall --all
