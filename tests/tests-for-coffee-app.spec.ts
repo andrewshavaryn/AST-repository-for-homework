@@ -26,3 +26,14 @@ test('AS-0001 Order espresso should be successful',
     page.getByRole('button', { name: 'Thanks for your purchase.' })
   ).toBeVisible();
 });
+
+
+test('AS-0002 Check prices', async ({ page }) => {
+  await page.goto('https://coffee-cart.app/');
+
+ 
+  await expect(page.locator('#app')).toContainText('Espresso $10.00');
+  
+  await expect(page.locator('#app')).toContainText('Cappuccino $19.00');
+  await expect(page.locator('#app')).toContainText('Mocha $8.00');
+});
