@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 //jira ticket id
 //test rail id
-test('AS-0001 Order espresso should be successful', 
+test('AS-0001-Order-espresso-should-be-successful', 
   {
     tag: ["@Regression"],
     annotation: {
