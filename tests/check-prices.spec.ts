@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('AS-0002-Check-prices', async ({ page }) => {
+test('AS-0002 Check prices', async ({ page }) => {
   await page.goto('https://coffee-cart.app/');
 
  
