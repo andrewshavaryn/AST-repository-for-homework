@@ -1,4 +1,3 @@
-
 // CDP - Chrome DevTool Protocol
 
 // Puppeteer
@@ -11,18 +10,18 @@ import { chromium, test } from "@playwright/test";
 //2 + 1 (2обов'язкові елементи будь якого тесту і 1 опційний);
 
 test.describe("ordering", { tag: "@smoke" }, async () => {
-test("run browsers", async ({ page, baseURL }) => {
-  console.log(baseURL);
-  const browser = await chromium.launch({ headless: false });
-  console.log(1);
-  const context = await browser.newContext();
+  test("run browsers", async ({ page, baseURL }) => {
+    console.log(baseURL);
+    const browser = await chromium.launch({ headless: false });
+    console.log(1);
+    const context = await browser.newContext();
 
-  const page1 = await browser.newPage();
-  const page2 = await browser.newPage();
+    const page1 = await browser.newPage();
+    const page2 = await browser.newPage();
 
-  const page3 = await context.newPage();
-  const page4 = await context.newPage();
-});
+    const page3 = await context.newPage();
+    const page4 = await context.newPage();
+  });
 });
 
 test("test page", async () => {
@@ -54,13 +53,3 @@ test("test page", async () => {
     .locator("css selector, xpath")
     .pressSequentially("this is my first fill");
 });
-
-
-
-//паралельний запуск
-
-
-
-
-
-
