@@ -7,7 +7,7 @@ import { chromium, test } from "@playwright/test";
 
 // DRY - don`t repeat your self
 
-//2 + 1 (2 обов'язкові елементи будь якого тесту і 1 опційний);
+//2 + 1 (2 обов'язкові елементи будь якого тесту: назва і функція і 1 опційний - це теги і/або анотації);
 
 test.describe("ordering", { tag: "@smoke" }, async () => {
   test("run browsers", async ({ page, baseURL }) => {
