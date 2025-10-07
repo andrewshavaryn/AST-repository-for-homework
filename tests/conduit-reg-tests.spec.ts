@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 
+
 test(
   "REG-0001 Sign up with valid credentials",
   {
