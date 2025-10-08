@@ -32,23 +32,27 @@ export default defineConfig({
     trace: "on-first-retry",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
+    actionTimeout: 30 * 1000,
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: "coffee-cart",
+      testDir: "tests/coffee-cart",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://coffee-cart.app/",
+        // testIdAttribute: "data-test",
+      },
     },
-
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
+      name: "aria-attributes",
+      testDir: "tests/aria-attributes",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "file:///Users/andrew_shava/Downloads/demo-aria.html#",
+      },
     },
 
     /* Test against mobile viewports. */
