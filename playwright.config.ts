@@ -55,6 +55,15 @@ export default defineConfig({
       },
     },
 
+    {
+      name: "conduit",
+      testDir: "tests/conduit",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://demo.learnwebdriverio.com//",
+      },
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
