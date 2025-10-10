@@ -1,4 +1,4 @@
-import test from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
 test("Selectors-0001 Verify local site", async ({ page }) => {
   await page.goto("");
