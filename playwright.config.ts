@@ -48,7 +48,7 @@ export default defineConfig({
     },
     {
       name: "aria-attributes",
-      testDir: "tests/aria-attributes",
+      testMatch: "**/aria-attributes/*.spec.ts",
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "file:///Users/andrew_shava/Downloads/demo-aria.html#",
