@@ -13,11 +13,6 @@ test("Selectors-0001 Verify local site", async ({ page }) => {
       await page.locator('[data-user-id="1"] > td').nth(i).textContent()
     );
   }
-
-  await page.goto("https://playwright.dev/");
-  await page.getByAltText("Browsers (Chromium, Firefox, WebKit)").click();
-
-  await page.getByText("").fill("test");
 });
 
 test("go to local site1", async ({ page }) => {
