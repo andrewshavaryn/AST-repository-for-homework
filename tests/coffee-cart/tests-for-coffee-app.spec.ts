@@ -210,31 +210,45 @@ test(
   },
   async ({ page }) => {
     await page.goto("https://coffee-cart.app/");
+
     await page.locator('[data-test="Espresso_Macchiato"]').click();
     await page.locator('[data-test="Flat_White"]').click();
+
     await page.getByRole("link", { name: "Cart page" }).click();
+
     await expect(
       page
         .locator("div")
         .filter({ hasText: "Espresso Macchiato x 1+-Flat" })
         .nth(1)
     ).toBeVisible();
+
     await page
       .getByRole("button", { name: "Add one Espresso Macchiato" })
       .click();
+
     await expect(page.getByText("Espresso Macchiato$12.00 x 2")).toBeVisible();
+
     await page
       .getByRole("button", { name: "Add one Espresso Macchiato" })
       .click();
+
     await expect(page.getByText("Espresso Macchiato$12.00 x 3")).toBeVisible();
+
     await page
       .getByRole("button", { name: "Remove one Espresso Macchiato" })
       .click();
+
     await expect(page.getByText("Espresso Macchiato$12.00 x 2")).toBeVisible();
+
     await page.getByText("Flat White$18.00 x 1+-$18.00x").click();
+
     await page.getByRole("button", { name: "Add one Flat White" }).click();
+
     await expect(page.getByText("Flat White$18.00 x 2+-$36.00x")).toBeVisible();
+
     await page.getByRole("button", { name: "Remove one Flat White" }).click();
+
     await expect(page.getByText("Flat White$18.00 x 1+-$18.00x")).toBeVisible();
   }
 );
