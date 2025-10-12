@@ -46,10 +46,10 @@ export default defineConfig({
         // testIdAttribute: "data-test",
       },
     },
-    
+
     {
       name: "css-selectors-and-aria-attributes",
-      testMatch: "**/css-selectors-and-aria-atributes/*.spec.ts", // ← виправлено
+      testDir: "tests/css-selectors-and-aria-atributes/",
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://coffee-cart.app/",
