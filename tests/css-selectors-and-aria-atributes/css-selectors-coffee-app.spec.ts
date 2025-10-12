@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test(
-  "AS-0003 Order with 3 products and promotion product",
+  "CSS-0001 Order with 3 products and promotion product",
   {
     tag: ["@Regression"],
     annotation: {
@@ -33,7 +33,7 @@ test(
 );
 
 test(
-  "AS-0004 Check that SKIP button not add new promo product to the Cart",
+  "CSS-0002 Check that SKIP button not add new promo product to the Cart",
 
   {
     tag: ["@Smoke"],
@@ -63,7 +63,7 @@ test(
 );
 
 test(
-  "AS-0005 Each subsequent discounted product (after first one) is added after adding 2 more products to the cart.",
+  "CSS-0003 Each subsequent discounted product (after first one) is added after adding 2 more products to the cart.",
   {
     tag: ["@Regression"],
     annotation: {
@@ -111,7 +111,7 @@ test(
 );
 
 test(
-  "AS-0006 User can delete all products from the Cart and Cart is displayed as empty",
+  "CSS-0004 User can delete all products from the Cart and Cart is displayed as empty",
   {
     tag: ["@Smoke"],
     annotation: {
@@ -151,7 +151,7 @@ test(
 );
 
 test(
-  "AS-0007 User can increase and reduce quantity of products in the Cart",
+  "CSS-0005 User can increase and reduce quantity of products in the Cart",
   {
     tag: ["@Smoke"],
     annotation: {
