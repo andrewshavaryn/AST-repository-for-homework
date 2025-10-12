@@ -35,11 +35,6 @@ test(
   }
 );
 
-
-
-
-
-
 test(
   "CSS-0002 Check that SKIP button not add new promo product to the Cart",
 
@@ -67,8 +62,6 @@ test(
       page.locator('button:has-text("Nah, I\'ll skip.")')
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "Nah, I'll skip." }).click();
-
     await page.locator('[aria-label="Cart page"]').click();
 
     await expect(page.locator("li.list-item:has(button.delete)")).toHaveCount(
@@ -76,11 +69,6 @@ test(
     );
   }
 );
-
-
-
-
-
 
 test(
   "CSS-0003 Each subsequent discounted product (after first one) is added after adding 2 more products to the cart.",
@@ -147,15 +135,6 @@ test(
   }
 );
 
-
-
-
-
-
-
-
-
-
 test(
   "CSS-0004 User can delete all products from the Cart and Cart is displayed as empty",
   {
@@ -188,16 +167,6 @@ test(
     await expect(page.locator("text=No coffee, go add some.")).toBeVisible();
   }
 );
-
-
-
-
-
-
-
-
-
-
 
 test(
   "CSS-0005 User can increase and reduce quantity of products in the Cart",
