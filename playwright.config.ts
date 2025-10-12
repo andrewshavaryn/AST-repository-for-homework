@@ -49,7 +49,7 @@ export default defineConfig({
 
     {
       name: "css-selectors-and-aria-attributes",
-      testDir: "tests/css-selectors-and-aria-atributes/",
+      testDir: "tests/css-selectors-and-aria-atributes",
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://coffee-cart.app/",
