@@ -47,11 +47,11 @@ export default defineConfig({
       },
     },
     {
-      name: "aria-attributes",
-      testMatch: "**/aria-attributes/*.spec.ts",
+      name: "css-selectors-and-aria-attributes",
+      testMatch: "**/css-selectors-coffee-app/*.spec.ts",
       use: {
         ...devices["Desktop Chrome"],
-        baseURL: "file:///Users/andrew_shava/Downloads/demo-aria.html#",
+        baseURL: "https://coffee-cart.app/",
       },
     },
 
