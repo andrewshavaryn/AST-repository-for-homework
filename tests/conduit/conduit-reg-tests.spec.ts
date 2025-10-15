@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-
 test(
   "REG-0001 Sign up with valid credentials",
   {
@@ -13,7 +12,7 @@ test(
 
   //Navigate to registration page
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto("/register");
 
     //Generate unique email to avoid conflicts
     const timestamp = Date.now();
@@ -37,12 +36,6 @@ test(
   }
 );
 
-
-
-
-
-
-
 test(
   "REG-0002 Sign up with already taken email",
   {
@@ -55,7 +48,7 @@ test(
 
   //Navigate to registration page
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto("/register");
 
     //Create new User
     const timestamp = Date.now();
@@ -78,7 +71,7 @@ test(
     ).toBeVisible();
 
     // Try to register with the same User
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto("/register");
 
     const newUsername = `NewUser${timestamp}`;
     await page.getByRole("textbox", { name: "Username" }).fill(newUsername);
@@ -90,12 +83,6 @@ test(
     await expect(page.getByText("email is already taken.")).toBeVisible();
   }
 );
-
-
-
-
-
-
 
 test(
   "REG-0003 Sign up with invalid email format",
@@ -109,7 +96,7 @@ test(
 
   //Navigate to registration page
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto("/register");
 
     //Generate unique username
     const timestamp = Date.now();

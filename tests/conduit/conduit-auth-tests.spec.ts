@@ -117,6 +117,6 @@ test(
     await expect(page.getByText("email can't be blank")).toBeVisible();
 
     // Verify user remains on login page
-    await expect(page).toHaveURL("https://demo.learnwebdriverio.com/login");
+    await expect(page).toHaveURL("/login");
   }
 );

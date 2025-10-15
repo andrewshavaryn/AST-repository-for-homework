@@ -61,7 +61,7 @@ export default defineConfig({
       testDir: "tests/conduit",
       use: {
         ...devices["Desktop Chrome"],
-        baseURL: "https://demo.learnwebdriverio.com//",
+        baseURL: "https://demo.learnwebdriverio.com",
       },
     },
 
