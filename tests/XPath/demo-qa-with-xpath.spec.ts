@@ -29,3 +29,38 @@ test(
     await expect(page.locator("//div[@id='output']")).toBeVisible();
   }
 );
+
+test(
+  "DEMOQA-0002",
+  {
+    tag: ["@regression"],
+    annotation: {
+      type: "description",
+      description: "Checkboxes functionality",
+    },
+  },
+
+  async ({ page }) => {
+    await page.goto("/checkbox");
+    await page.locator("//*[@id='tree-node']/ol/li/span/button").click();
+
+    await page.locator("//*[@id='tree-node']/ol/li/ol/li[1]/span").click();
+
+    await page
+      .locator("label")
+      .filter({ hasText: "Desktop" })
+      .getByRole("img")
+      .first()
+      .click();
+    await expect(
+      page.locator("span").filter({ hasText: "Desktop" }).first()
+    ).toBeVisible();
+    await expect(
+      page.locator("span").filter({ hasText: "Notes" }).first()
+    ).toBeVisible();
+    await page.locator("span").filter({ hasText: "Commands" }).first().click();
+    await expect(
+      page.getByText("You have selected :desktopnotescommands")
+    ).toBeVisible();
+  }
+);
