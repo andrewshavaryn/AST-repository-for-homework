@@ -65,6 +65,15 @@ export default defineConfig({
       },
     },
 
+    {
+      name: "XPath",
+      testDir: "tests/XPath",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://demoqa.com",
+      },
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
