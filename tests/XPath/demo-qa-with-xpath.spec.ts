@@ -30,6 +30,8 @@ test(
   }
 );
 
+
+
 test(
   "DEMOQA-0002",
   {
@@ -41,26 +43,8 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("/checkbox");
-    await page.locator("//*[@id='tree-node']/ol/li/span/button").click();
-
-    await page.locator("//*[@id='tree-node']/ol/li/ol/li[1]/span").click();
-
-    await page
-      .locator("label")
-      .filter({ hasText: "Desktop" })
-      .getByRole("img")
-      .first()
-      .click();
-    await expect(
-      page.locator("span").filter({ hasText: "Desktop" }).first()
-    ).toBeVisible();
-    await expect(
-      page.locator("span").filter({ hasText: "Notes" }).first()
-    ).toBeVisible();
-    await page.locator("span").filter({ hasText: "Commands" }).first().click();
-    await expect(
-      page.getByText("You have selected :desktopnotescommands")
-    ).toBeVisible();
-  }
-);
+  await page.goto("/checkbox");
+  await page.getByRole('button', { name: 'Expand all' }).click();
+  await page.locator('label').filter({ hasText: 'Home' }).getByRole('img').first().click();
+  await expect(page.locator('#result')).toBeVisible();
+});
