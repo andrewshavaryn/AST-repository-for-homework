@@ -30,8 +30,6 @@ test(
   }
 );
 
-
-
 test(
   "DEMOQA-0002",
   {
@@ -43,8 +41,34 @@ test(
   },
 
   async ({ page }) => {
-  await page.goto("/checkbox");
-  await page.getByRole('button', { name: 'Expand all' }).click();
-  await page.locator('label').filter({ hasText: 'Home' }).getByRole('img').first().click();
-  await expect(page.locator('#result')).toBeVisible();
-});
+    await page.goto("/checkbox");
+
+   await page.locator("//button[@title='Expand all']").click();
+
+    await page.locator("//span[text()='Home']/..//span[@class='rct-checkbox']").click();
+
+    const labels = [
+      "Home",
+      "Desktop",
+      "Notes",
+      "Commands",
+      "Documents",
+      "WorkSpace",
+      "React",
+      "Angular",
+      "Veu",
+      "Office",
+      "Public",
+      "Private",
+      "Classified",
+      "General",
+      "Downloads",
+      "Word File.doc",
+      "Excel File.doc",
+    ];
+
+    for (const label of labels) {
+      await expect(page.getByLabel(label)).toBeChecked();
+    }
+  }
+);
