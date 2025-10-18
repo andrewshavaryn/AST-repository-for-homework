@@ -30,6 +30,10 @@ test(
   }
 );
 
+
+
+
+
 test(
   "DEMOQA-0002",
   {
@@ -43,9 +47,11 @@ test(
   async ({ page }) => {
     await page.goto("/checkbox");
 
-   await page.locator("//button[@title='Expand all']").click();
+    await page.locator("//button[@title='Expand all']").click();
 
-    await page.locator("//span[text()='Home']/..//span[@class='rct-checkbox']").click();
+    await page
+      .locator("//span[text()='Home']/..//span[@class='rct-checkbox']")
+      .click();
 
     const labels = [
       "Home",
@@ -70,5 +76,34 @@ test(
     for (const label of labels) {
       await expect(page.getByLabel(label)).toBeChecked();
     }
+  }
+);
+
+
+
+
+
+test(
+  "DEMOQA-0003",
+  {
+    tag: ["@regression"],
+    annotation: {
+      type: "description",
+      description: "Radio Buttons functionality",
+    },
+  },
+
+  async ({ page }) => {
+    await page.goto("/radio-button");
+
+    await page.locator("//label[@for='yesRadio']").click();
+    await expect(page.locator("//input[@id='yesRadio']")).toBeChecked();
+    await expect(page.locator("//p[contains(text(), 'You have selected')]")).toBeVisible();
+
+    await page.locator("//label[@for='impressiveRadio']").click();
+    await expect(page.locator("//input[@id='impressiveRadio']")).toBeChecked();
+    await expect(page.locator("//span[text()='Impressive']")).toBeVisible();
+
+    await expect(page.locator("//input[@id='noRadio']")).toBeDisabled();
   }
 );
