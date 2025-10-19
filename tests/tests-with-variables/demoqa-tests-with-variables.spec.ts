@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test(
-  "DEMOQA-0001 User can submit the form with valid data",
+  "VAR-0012 User can submit the form with valid data",
   {
     tag: ["@smoke"],
     annotation: {
@@ -11,7 +11,7 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("/text-box");
+    await page.goto("https://demoqa.com/text-box");
 
     await expect(page.locator("//*[@id='userName']")).toBeVisible();
     await page.locator("//*[@id='userName']").fill("Andrew");
@@ -31,7 +31,7 @@ test(
 );
 
 test(
-  "DEMOQA-0002 All checkboxes can be selected",
+  "VAR-0013 All checkboxes can be selected",
   {
     tag: ["@regression"],
     annotation: {
@@ -41,7 +41,7 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("/checkbox");
+    await page.goto("https://demoqa.com/checkbox");
 
     await page.locator("//button[@title='Expand all']").click();
 
@@ -76,7 +76,7 @@ test(
 );
 
 test(
-  "DEMOQA-0003 All radio buttons can be selected one by one",
+  "VAR-0014 All radio buttons can be selected one by one",
   {
     tag: ["@regression"],
     annotation: {
@@ -86,7 +86,7 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("/radio-button");
+    await page.goto("https://demoqa.com/radio-button");
 
     await page.locator("//label[@for='yesRadio']").click();
     await expect(page.locator("//input[@id='yesRadio']")).toBeChecked();
