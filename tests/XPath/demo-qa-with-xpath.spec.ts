@@ -35,7 +35,7 @@ test(
 
 
 test(
-  "DEMOQA-0002",
+  "DEMOQA-0002 All checkboxes can be selected",
   {
     tag: ["@regression"],
     annotation: {
@@ -84,7 +84,7 @@ test(
 
 
 test(
-  "DEMOQA-0003",
+  "DEMOQA-0003 All radio buttons can be selected one by one",
   {
     tag: ["@regression"],
     annotation: {
