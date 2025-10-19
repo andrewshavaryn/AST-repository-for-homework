@@ -59,11 +59,6 @@ test(
   }
 );
 
-
-
-
-
-
 test(
   "AUTH-0002 User can't log in with empty password",
   {
@@ -89,11 +84,6 @@ test(
     await expect(page).toHaveURL("https://demo.learnwebdriverio.com/login");
   }
 );
-
-
-
-
-
 
 test(
   "AUTH-0003 User can't log in with empty email",

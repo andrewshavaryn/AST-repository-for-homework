@@ -6,7 +6,7 @@ test(
     tag: ["@smoke"],
     annotation: {
       type: "description",
-      description: "Positive cases for submit the form",
+      description: "Positive case for submit the form",
     },
   },
 
