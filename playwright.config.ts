@@ -74,6 +74,14 @@ export default defineConfig({
       },
     },
 
+    {
+      name: "tests-with-variables",
+      testDir: "tests/tests-with-variables",
+      use: {
+        ...devices["Desktop Chrome"],
+      },
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
