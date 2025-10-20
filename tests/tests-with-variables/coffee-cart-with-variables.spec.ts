@@ -1,9 +1,34 @@
 import { test, expect } from "@playwright/test";
 
+const baseURL = "https://coffee-cart.app";
+const promoMessage = "It's your lucky day! Get an extra cup of Mocha for $4.espressochocolate";
+const promoAcceptButton = "Yes, of course!";
+const successMessage = "Thanks for your purchase.";
+const espresso = '[data-test="Espresso"]';
+const flatWhite = '[data-test="Flat_White"]';
+const americano = '[data-test="Americano"]';
+const espressoMacchiato = '[data-test="Espresso_Macchiato"]';
+const cappuccino = '[data-test="Cappuccino"]';
+const mocha = '[data-test="Mocha"]';
+const cafeLatte = '[data-test="Cafe_Latte"]';
+const espressoConPanna = '[data-test="Espresso_Con Panna"]';
+const checkout = '[data-test="checkout"]';
+const nameField = "Name";
+const emailField = "Email";
+const promoCheckbox = "Promotion checkbox";
+const submitButton = "Submit";
+const yesPromoButton = "Yes, of course!";
+const skipButton = "Nah, I'll skip.";
+const app = "#app";
+const cart = "Cart page";
+const promoItem = (quantity: number) => `(Discounted) Mocha$4.00 x ${quantity}`;
+const menu = "Menu page";
+const emptyCart = "No coffee, go add some.";
+
 test(
   "VAR-0001 Order with 3 products and promotion product",
   {
-    tag: ["@Regression"],
+    tag: ["@regression"],
     annotation: {
       type: "description",
       description: "Order with 3 products and promotion product",
@@ -11,28 +36,26 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://coffee-cart.app/");
+    await page.goto(baseURL);
 
-    const promoMessage = "It's your lucky day! Get an extra cup of Mocha for $4.espressochocolate";
-    const promoAcceptButton = "Yes, of course!";
-    const successMessage = "Thanks for your purchase.";
-
-    await page.locator('[data-test="Espresso"]').click();
-    await page.locator('[data-test="Flat_White"]').click();
-    await page.locator('[data-test="Americano"]').click();
+    await page.locator(espresso).click();
+    await page.locator(flatWhite).click();
+    await page.locator(americano).click();
 
     await expect(page.getByText(promoMessage)).toBeVisible();
 
-    await page.getByRole("button", {name: promoAcceptButton}).click();
-    await page.locator('[data-test="checkout"]').click();
+    await page.getByRole("button", { name: promoAcceptButton }).click();
+    await page.locator(checkout).click();
 
-    await page.getByRole("textbox", { name: "Name" }).fill("andrew");
-    await page.getByRole("textbox", { name: "Email" }).fill("andrew@gmail.com");
-    await page.getByRole("checkbox", { name: "Promotion checkbox" }).check();
-    await page.getByRole("button", { name: "Submit" }).click();
+    await page.getByRole("textbox", { name: nameField }).fill("andrew");
+    await page
+      .getByRole("textbox", { name: emailField })
+      .fill("andrew@gmail.com");
+    await page.getByRole("checkbox", { name: promoCheckbox }).check();
+    await page.getByRole("button", { name: submitButton }).click();
 
     await expect(
-      page.getByRole("button", { name: "Thanks for your purchase." })
+      page.getByRole("button", { name: successMessage })
     ).toBeVisible();
   }
 );
@@ -41,7 +64,7 @@ test(
   "VAR-0002 Check that SKIP button not add new promo product to the Cart",
 
   {
-    tag: ["@Smoke"],
+    tag: ["@smoke"],
     annotation: {
       type: "description",
       description:
@@ -50,27 +73,25 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://coffee-cart.app/");
-    await page.locator('[data-test="Espresso"]').click();
-    await page.locator('[data-test="Espresso_Macchiato"]').click();
-    await page.locator('[data-test="Cappuccino"]').click();
-    await expect(
-      page.getByText(
-        "It's your lucky day! Get an extra cup of Mocha for $4.espressochocolate"
-      )
-    ).toBeVisible();
-    await expect(page.locator("#app")).toContainText("Nah, I'll skip.");
-    await page.getByRole("button", { name: "Nah, I'll skip." }).click();
-    await expect(page.locator("#app")).toContainText(
-      "Cappuccino x 1+-Espresso x 1+-Espresso Macchiato x 1+-"
-    );
+    const cartContent =
+      "Cappuccino x 1+-Espresso x 1+-Espresso Macchiato x 1+-";
+    await page.goto(baseURL);
+    await page.locator(espresso).click();
+    await page.locator(espressoMacchiato).click();
+    await page.locator(cappuccino).click();
+
+    await expect(page.getByText(promoMessage)).toBeVisible();
+
+    await expect(page.locator(app)).toContainText(skipButton);
+    await page.getByRole("button", { name: skipButton }).click();
+    await expect(page.locator(app)).toContainText(cartContent);
   }
 );
 
 test(
   "VAR-0003 Each subsequent discounted product (after first one) is added after adding 2 more products to the cart.",
   {
-    tag: ["@Regression"],
+    tag: ["@regression"],
     annotation: {
       type: "description",
       description: "Discount logic",
@@ -78,47 +99,47 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://coffee-cart.app/");
-    await page.locator('[data-test="Espresso"]').click();
-    await page.locator('[data-test="Espresso_Macchiato"]').click();
-    await page.locator('[data-test="Cappuccino"]').click();
-    await expect(
-      page.getByText(
-        "It's your lucky day! Get an extra cup of Mocha for $4.espressochocolate"
-      )
-    ).toBeVisible();
-    await page.getByRole("button", { name: "Yes, of course!" }).click();
-    await page.getByRole("link", { name: "Cart page" }).click();
-    await expect(page.getByText("(Discounted) Mocha$4.00 x 1")).toBeVisible();
-    await page.getByRole("link", { name: "Menu page" }).click();
-    await page.locator('[data-test="Mocha"]').click();
-    await page.locator('[data-test="Flat_White"]').click();
-    await expect(
-      page.getByText(
-        "It's your lucky day! Get an extra cup of Mocha for $4.espressochocolate"
-      )
-    ).toBeVisible();
-    await page.getByRole("button", { name: "Yes, of course!" }).click();
-    await page.getByRole("link", { name: "Cart page" }).click();
-    await expect(page.getByText("(Discounted) Mocha$4.00 x 2")).toBeVisible();
-    await page.getByRole("link", { name: "Menu page" }).click();
-    await page.locator('[data-test="Cafe_Latte"]').click();
-    await page.locator('[data-test="Espresso_Con Panna"]').click();
-    await expect(
-      page.getByText(
-        "It's your lucky day! Get an extra cup of Mocha for $4.espressochocolate"
-      )
-    ).toBeVisible();
-    await page.getByRole("button", { name: "Yes, of course!" }).click();
+    await page.goto(baseURL);
+
+    await page.locator(espresso).click();
+    await page.locator(espressoMacchiato).click();
+    await page.locator(cappuccino).click();
+
+    await expect(page.getByText(promoMessage)).toBeVisible();
+
+    await page.getByRole("button", { name: yesPromoButton }).click();
+    await page.getByRole("link", { name: cart }).click();
+
+    await expect(page.getByText(promoItem(1))).toBeVisible();
+    await page.getByRole("link", { name: menu }).click();
+
+    await page.locator(mocha).click();
+    await page.locator(flatWhite).click();
+
+    await expect(page.getByText(promoMessage)).toBeVisible();
+
+    await page.getByRole("button", { name: yesPromoButton }).click();
+    await page.getByRole("link", { name: cart }).click();
+
+    await expect(page.getByText(promoItem(2))).toBeVisible();
+    await page.getByRole("link", { name: menu }).click();
+
+    await page.locator(cafeLatte).click();
+    await page.locator(espressoConPanna).click();
+
+    await expect(page.getByText(promoMessage)).toBeVisible();
+
+    await page.getByRole("button", { name: yesPromoButton }).click();
+
     await page.getByRole("listitem").filter({ hasText: "cart (10)" }).click();
-    await expect(page.getByText("(Discounted) Mocha$4.00 x 3")).toBeVisible();
+    await expect(page.getByText(promoItem(3))).toBeVisible();
   }
 );
 
 test(
   "VAR-0004 User can delete all products from the Cart and Cart is displayed as empty",
   {
-    tag: ["@Smoke"],
+    tag: ["@smoke"],
     annotation: {
       type: "description",
       description: "Delete functionality",
@@ -126,10 +147,11 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://coffee-cart.app/");
-    await page.locator('[data-test="Flat_White"]').click();
-    await page.locator('[data-test="Americano"]').click();
-    await page.getByRole("link", { name: "Cart page" }).click();
+    await page.goto(baseURL);
+
+    await page.locator(flatWhite).click();
+    await page.locator(americano).click();
+    await page.getByRole("link", { name: cart }).click();
 
     await expect(
       page
@@ -150,7 +172,7 @@ test(
     await page.getByRole("button", { name: "Remove all Flat White" }).click();
 
     await expect(
-      page.locator("div").filter({ hasText: /^No coffee, go add some\.$/ })
+      page.locator("div").filter({ hasText: emptyCart }).first()
     ).toBeVisible();
   }
 );
@@ -158,19 +180,23 @@ test(
 test(
   "VAR-0005 User can increase and reduce quantity of products in the Cart",
   {
-    tag: ["@Smoke"],
+    tag: ["@іmoke"],
     annotation: {
       type: "description",
       description: "Cart functionality",
     },
   },
   async ({ page }) => {
-    await page.goto("https://coffee-cart.app/");
+    const addOneEspressoMacchiato = "Add one Espresso Macchiato";
+    const removeOneEspressoMacchiato = "Remove one Espresso Macchiato";
+    const addOneFlatWhite = "Add one Flat White";
+    const removeOneFlatWhite = "Remove one Flat White";
+    await page.goto(baseURL);
 
-    await page.locator('[data-test="Espresso_Macchiato"]').click();
-    await page.locator('[data-test="Flat_White"]').click();
+    await page.locator(espressoMacchiato).click();
+    await page.locator(flatWhite).click();
 
-    await page.getByRole("link", { name: "Cart page" }).click();
+    await page.getByRole("link", { name: cart }).click();
 
     await expect(
       page
@@ -179,31 +205,27 @@ test(
         .nth(1)
     ).toBeVisible();
 
-    await page
-      .getByRole("button", { name: "Add one Espresso Macchiato" })
-      .click();
+    await page.getByRole("button", {name: addOneEspressoMacchiato }).click();
 
     await expect(page.getByText("Espresso Macchiato$12.00 x 2")).toBeVisible();
 
-    await page
-      .getByRole("button", { name: "Add one Espresso Macchiato" })
-      .click();
+    await page.getByRole("button", {name: addOneEspressoMacchiato }).click();
 
     await expect(page.getByText("Espresso Macchiato$12.00 x 3")).toBeVisible();
 
     await page
-      .getByRole("button", { name: "Remove one Espresso Macchiato" })
+      .getByRole("button", { name: removeOneEspressoMacchiato })
       .click();
 
     await expect(page.getByText("Espresso Macchiato$12.00 x 2")).toBeVisible();
 
     await page.getByText("Flat White$18.00 x 1+-$18.00x").click();
 
-    await page.getByRole("button", { name: "Add one Flat White" }).click();
+    await page.getByRole("button", { name: addOneFlatWhite }).click();
 
     await expect(page.getByText("Flat White$18.00 x 2+-$36.00x")).toBeVisible();
 
-    await page.getByRole("button", { name: "Remove one Flat White" }).click();
+    await page.getByRole("button", { name: removeOneFlatWhite }).click();
 
     await expect(page.getByText("Flat White$18.00 x 1+-$18.00x")).toBeVisible();
   }

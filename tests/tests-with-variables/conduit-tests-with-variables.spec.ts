@@ -1,5 +1,22 @@
 import { test, expect } from "@playwright/test";
 
+const baseUrl = "https://demo.learnwebdriverio.com";
+const titleForLoggedinUser = "conduit Home New Article";
+const settings = "  Settings";
+const logout = "Or click here to logout.";
+const signInButton = "Sign in";
+const signUpButton = "Sign up";
+const emailField = "Email";
+const passwordField = "Password";
+const usernameField = "Username";
+const errorMessageForPassword = "password can't be blank";
+const errorMessageForBlankEmail = "email can't be blank";
+const errorMessageForTakenEmail = "email is already taken.";
+const errorMessageForInvalidEmail = "email is invalid"
+const timestamp = Date.now();
+const uniqueEmail = `test${timestamp}@gmail.com`;
+const uniqueUsername = `Andrew${timestamp}`;
+
 test(
   "VAR-0006 Log in with valid email credentials",
   {
@@ -10,11 +27,9 @@ test(
     },
   },
 
-  //Navigate to registration page
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto(baseUrl + "/register");
 
-    //Create a new User
     const timestamp = Date.now();
     const testEmail = `user${timestamp}@gmail.com`;
     const testPassword = "test1234";
@@ -25,36 +40,28 @@ test(
     await page.getByRole("textbox", { name: "Password" }).fill(testPassword);
     await page.getByRole("button", { name: "Sign up" }).click();
 
-    //Wait for successful registration
     await expect(
-      page
-        .getByRole("navigation")
-        .filter({ hasText: "conduit Home New Article" })
+      page.getByRole("navigation").filter({ hasText: titleForLoggedinUser })
     ).toBeVisible();
 
-    // Log out via Settings
-    await page.getByRole("link", { name: "  Settings" }).click();
-    await page
-      .getByRole("button", { name: "Or click here to logout." })
-      .click();
+    await page.getByRole("link", { name: settings }).click();
 
-    //Verify log out
+    await page.getByRole("button", { name: logout }).click();
+
     await expect(
       page
         .getByRole("navigation")
         .filter({ hasText: "conduit Home Sign in Sign up" })
     ).toBeVisible();
 
-    //Test login with valid credentials
-    await page.goto("https://demo.learnwebdriverio.com/login");
-    await page.getByRole("textbox", { name: "Email" }).fill(testEmail);
-    await page.getByRole("textbox", { name: "Password" }).fill(testPassword);
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.goto(baseUrl + "/login");
+    await page.getByRole("textbox", { name: emailField }).fill(testEmail);
+    await page.getByRole("textbox", { name: passwordField }).fill(testPassword);
+    await page.getByRole("button", { name: signInButton }).click();
 
-    //Verify successful login
     await page
       .getByRole("navigation")
-      .filter({ hasText: "conduit Home New Article" })
+      .filter({ hasText: titleForLoggedinUser })
       .click();
   }
 );
@@ -62,33 +69,31 @@ test(
 test(
   "VAR-0007 User can't log in with empty password",
   {
-    tag: ["@Regression"],
+    tag: ["@regression"],
     annotation: {
       type: "description",
       description: "Negative cases for login functionality",
     },
   },
 
-  //Navigate to Login page
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/login");
+    await page.goto(baseUrl + "/login");
 
-    //Fill in valid email, leave password empty and try to log in
-    await page.getByRole("textbox", { name: "Email" }).fill("test31@gmail.com");
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page
+      .getByRole("textbox", { name: emailField })
+      .fill("test31@gmail.com");
+    await page.getByRole("button", { name: signInButton }).click();
 
-    //Verify error
-    await expect(page.getByText("password can't be blank")).toBeVisible();
+    await expect(page.getByText(errorMessageForPassword)).toBeVisible();
 
-    // Verify user remains on login page
-    await expect(page).toHaveURL("https://demo.learnwebdriverio.com/login");
+    await expect(page).toHaveURL(baseUrl + "/login");
   }
 );
 
 test(
   "VAR-0008 User can't log in with empty email",
   {
-    tag: ["@Regression"],
+    tag: ["@regression"],
     annotation: {
       type: "description",
       description: "Negative cases for login functionality",
@@ -96,14 +101,14 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/login");
+    await page.goto(baseUrl + "/login");
 
-    await page.getByRole("textbox", { name: "Password" }).fill("test1234");
-    await page.getByRole("button", { name: "Sign in" }).click();
+    await page.getByRole("textbox", { name: passwordField }).fill("test1234");
+    await page.getByRole("button", { name: signInButton }).click();
 
-    await expect(page.getByText("email can't be blank")).toBeVisible();
+    await expect(page.getByText(errorMessageForBlankEmail)).toBeVisible();
 
-    await expect(page).toHaveURL("https://demo.learnwebdriverio.com/login");
+    await expect(page).toHaveURL(baseUrl + "/login");
   }
 );
 
@@ -118,22 +123,18 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto(baseUrl + "/register");
 
-    const timestamp = Date.now();
-    const uniqueEmail = `test${timestamp}@gmail.com`;
-    const uniqueUsername = `Andrew${timestamp}`;
+    await page
+      .getByRole("textbox", { name: usernameField })
+      .fill(uniqueUsername);
+    await page.getByRole("textbox", { name: emailField }).fill(uniqueEmail);
+    await page.getByRole("textbox", { name: passwordField }).fill("test1234");
 
-    await page.getByRole("textbox", { name: "Username" }).fill(uniqueUsername);
-    await page.getByRole("textbox", { name: "Email" }).fill(uniqueEmail);
-    await page.getByRole("textbox", { name: "Password" }).fill("test1234");
-
-    await page.getByRole("button", { name: "Sign up" }).click();
+    await page.getByRole("button", { name: signUpButton }).click();
 
     await expect(
-      page
-        .getByRole("navigation")
-        .filter({ hasText: "conduit Home New Article" })
+      page.getByRole("navigation").filter({ hasText: titleForLoggedinUser })
     ).toBeVisible();
   }
 );
@@ -141,7 +142,7 @@ test(
 test(
   "VAR-0010 Sign up with already taken email",
   {
-    tag: ["@Regression"],
+    tag: ["@regression"],
     annotation: {
       type: "description",
       description: "Sign up with already taken email",
@@ -149,40 +150,39 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto(baseUrl + "/register");
 
-    const timestamp = Date.now();
     const testEmail = `best${timestamp}@gmail.com`;
     const testUsername = `User${timestamp}`;
 
-    await page.getByRole("textbox", { name: "Username" }).fill(testUsername);
-    await page.getByRole("textbox", { name: "Email" }).fill(testEmail);
-    await page.getByRole("textbox", { name: "Password" }).fill("test1234");
+    await page.getByRole("textbox", {name: usernameField }).fill(testUsername);
+    await page.getByRole("textbox", {name: emailField }).fill(testEmail);
+    await page.getByRole("textbox", {name: passwordField }).fill("test1234");
 
-    await page.getByRole("button", { name: "Sign up" }).click();
+    await page.getByRole("button", {name: signUpButton }).click();
 
     await expect(
-      page
-        .getByRole("navigation")
-        .filter({ hasText: "conduit Home New Article" })
+      page.getByRole("navigation").filter({hasText: titleForLoggedinUser })
     ).toBeVisible();
 
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto(baseUrl + "/register");
 
     const newUsername = `NewUser${timestamp}`;
-    await page.getByRole("textbox", { name: "Username" }).fill(newUsername);
-    await page.getByRole("textbox", { name: "Email" }).fill(testEmail); // Той же email!
-    await page.getByRole("textbox", { name: "Password" }).fill("test1234");
-    await page.getByRole("button", { name: "Sign up" }).click();
+    await page.getByRole("textbox", { name: usernameField }).fill(newUsername);
+    await page.getByRole("textbox", { name: emailField }).fill(testEmail); // Той же email!
+    await page.getByRole("textbox", { name: passwordField }).fill("test1234");
+    await page.getByRole("button", { name: signUpButton }).click();
 
-    await expect(page.getByText("email is already taken.")).toBeVisible();
+    await expect(page.getByText(errorMessageForTakenEmail)).toBeVisible();
   }
 );
+
+
 
 test(
   "VAR-0011 Sign up with invalid email format",
   {
-    tag: ["@Regression"],
+    tag: ["@regression"],
     annotation: {
       type: "description",
       description: "Verify error message when email format is invalid",
@@ -190,17 +190,14 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("https://demo.learnwebdriverio.com/register");
+    await page.goto(baseUrl+"/register");
 
-    const timestamp = Date.now();
-    const uniqueUsername = `Leonardo${timestamp}`;
+    await page.getByRole("textbox", {name: usernameField }).fill(uniqueUsername);
+    await page.getByRole("textbox", {name: emailField}).fill("DiCaprio");
+    await page.getByRole("textbox", {name: passwordField}).fill("test1234");
 
-    await page.getByRole("textbox", { name: "Username" }).fill(uniqueUsername);
-    await page.getByRole("textbox", { name: "Email" }).fill("DiCaprio");
-    await page.getByRole("textbox", { name: "Password" }).fill("test1234");
+    await page.getByRole("button", {name: signUpButton}).click();
 
-    await page.getByRole("button", { name: "Sign up" }).click();
-
-    await expect(page.getByText("email is invalid")).toBeVisible();
+    await expect(page.getByText(errorMessageForInvalidEmail)).toBeVisible();
   }
 );
