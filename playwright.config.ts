@@ -61,7 +61,24 @@ export default defineConfig({
       testDir: "tests/conduit",
       use: {
         ...devices["Desktop Chrome"],
-        baseURL: "https://demo.learnwebdriverio.com//",
+        baseURL: "https://demo.learnwebdriverio.com",
+      },
+    },
+
+    {
+      name: "XPath",
+      testDir: "tests/XPath",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://demoqa.com",
+      },
+    },
+
+    {
+      name: "tests-with-variables",
+      testDir: "tests/tests-with-variables",
+      use: {
+        ...devices["Desktop Chrome"],
       },
     },
 

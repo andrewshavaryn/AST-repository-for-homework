@@ -59,7 +59,7 @@ test(
     );
 
     await expect(
-      page.locator('button:has-text("Nah, I\'ll skip.")')
+      page.locator("button", { hasText: "Nah, I'll skip." })
     ).toBeVisible();
 
     await page.locator('[aria-label="Cart page"]').click();
@@ -92,15 +92,12 @@ test(
     );
 
     await page.locator('button:has-text("Yes, of course!")').click();
-
     await page.locator('[aria-label="Cart page"]').click();
-
     await expect(
       page.locator("text=(Discounted) Mocha$4.00 x 1")
     ).toBeVisible();
 
     await page.locator('[aria-label="Menu page"]').click();
-
     await page.locator('[data-test="Mocha"]').click();
     await page.locator('[data-test="Flat_White"]').click();
 
@@ -109,7 +106,6 @@ test(
     );
 
     await page.locator('button:has-text("Yes, of course!")').click();
-
     await page.locator('[aria-label="Cart page"]').click();
 
     await expect(
@@ -126,7 +122,6 @@ test(
     );
 
     await page.locator('button:has-text("Yes, of course!")').click();
-
     await page.locator('[aria-label="Cart page"]').click();
 
     await expect(
