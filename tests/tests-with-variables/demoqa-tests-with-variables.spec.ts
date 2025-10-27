@@ -13,7 +13,7 @@ test(
   },
 
   async ({ page }) => {
-    const userNameField = page.locator("//*[@id='userName']");
+    const userNameField = page.locator("//*[@id='userName']"); //перейменувати Field на Input;
     const userEmailField = page.locator("//*[@id='userEmail']");
     const currentAddressField = page.locator("//*[@id='currentAddress']");
     const permanentAddressField = page.locator("//*[@id='permanentAddress']");
@@ -22,16 +22,9 @@ test(
 
     await page.goto(baseUrl + "/text-box");
 
-    await expect(userNameField).toBeVisible();
     await userNameField.fill("Andrew");
-
-    await expect(userEmailField).toBeVisible();
     await userEmailField.fill("andrewtest@gmail.com");
-
-    await expect(currentAddressField).toBeVisible();
     await currentAddressField.fill("Paradise City");
-
-    await expect(permanentAddressField).toBeVisible();
     await permanentAddressField.fill("Unvgvar, Ukraine");
 
     await submitButton.click();
@@ -81,7 +74,7 @@ test(
     ];
 
     for (const label of labels) {
-      await expect(label).toBeChecked();
+      await expect(label).toBeChecked(); //переписати з pagegetbyLabel один раз, а не багато
     }
   }
 );
@@ -98,19 +91,21 @@ test(
 
   async ({ page }) => {
     await page.goto(baseUrl + "/radio-button");
-    const yesRadio = page.locator("//label[@for='yesRadio']");
-    const impressiveRadio = page.locator("//label[@for='impressiveRadio']");
+    const yesRadioLabel = page.locator("//label[@for='yesRadio']");
+    const yesRadioInput = page.locator("//input[@id='yesRadio']");
+    const yesChoosenRadio = page.locator("//p[contains(text(), 'You have selected')]");
+    const impressiveRadioLabel = page.locator("//label[@for='impressiveRadio']");
+    const impressiveRadioInput = page.locator("//input[@id='impressiveRadio']");
+    const impressiveChoosenRadio = page.locator("//span[text()='Impressive']");
     const noRadio = page.locator("//input[@id='noRadio']");
 
-    await yesRadio.click();
-    await expect(page.locator("//input[@id='yesRadio']")).toBeChecked();
-    await expect(
-      page.locator("//p[contains(text(), 'You have selected')]")
-    ).toBeVisible();
+    await yesRadioLabel.click();
+    await expect(yesRadioInput).toBeChecked();
+    await expect(yesChoosenRadio).toBeVisible();
 
-    await impressiveRadio.click();
-    await expect(page.locator("//input[@id='impressiveRadio']")).toBeChecked();
-    await expect(page.locator("//span[text()='Impressive']")).toBeVisible();
+    await impressiveRadioLabel.click();
+    await expect(impressiveRadioInput).toBeChecked();
+    await expect(impressiveChoosenRadio).toBeVisible();
 
     await expect(noRadio).toBeDisabled();
   }

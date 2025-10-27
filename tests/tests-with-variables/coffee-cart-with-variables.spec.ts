@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const baseURL = "https://coffee-cart.app";
-const promoMessage = "It's your lucky day! Get an extra cup of Mocha for $4.espressochocolate";
+const promoMessage = "It's your lucky day! Get an extra cup of Mocha for $4.";
 const promoAcceptButton = "Yes, of course!";
 const successMessage = "Thanks for your purchase.";
 const espresso = '[data-test="Espresso"]';
@@ -38,11 +38,11 @@ test(
   async ({ page }) => {
     await page.goto(baseURL);
 
-    await page.locator(espresso).click();
-    await page.locator(flatWhite).click();
-    await page.locator(americano).click();
+    await espresso.click();
+    await flatWhite.click();
+    await americano.click();
 
-    await expect(page.getByText(promoMessage)).toBeVisible();
+    await expect(promoMessage).toBeVisible();
 
     await page.getByRole("button", { name: promoAcceptButton }).click();
     await page.locator(checkout).click();
