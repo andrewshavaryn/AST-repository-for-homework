@@ -2,17 +2,6 @@ import { test, expect } from "@playwright/test";
 
 const baseUrl = "https://demo.learnwebdriverio.com";
 const titleForLoggedinUser = "conduit Home New Article";
-const settings = "  Settings";
-const logout = "Or click here to logout.";
-const signInButton = "Sign in";
-const signUpButton = "Sign up";
-const emailField = "Email";
-const passwordField = "Password";
-const usernameField = "Username";
-const errorMessageForPassword = "password can't be blank";
-const errorMessageForBlankEmail = "email can't be blank";
-const errorMessageForTakenEmail = "email is already taken.";
-const errorMessageForInvalidEmail = "email is invalid"
 const timestamp = Date.now();
 const uniqueEmail = `test${timestamp}@gmail.com`;
 const uniqueUsername = `Andrew${timestamp}`;
@@ -20,14 +9,24 @@ const uniqueUsername = `Andrew${timestamp}`;
 test(
   "VAR-0006 Log in with valid email credentials",
   {
-    tag: ["@Regression"],
+    tag: "@Regression",
     annotation: {
       type: "description",
       description: "Log in with valid credentials",
     },
   },
-
   async ({ page }) => {
+    const settingsLink = page.getByRole("link", { name: "Settings" });
+    const logoutButton = page.getByRole("button", { name: "Or click here to logout." });
+    const signInButton = page.getByRole("button", { name: "Sign in" });
+    const signUpButton = page.getByRole("button", { name: "Sign up" });
+    const usernameTextbox = page.getByRole("textbox", { name: "Username" });
+    const emailTextbox = page.getByRole("textbox", { name: "Email" });
+    const passwordTextbox = page.getByRole("textbox", { name: "Password" });
+    const loggedInNavigation = page.getByRole("navigation").filter({ hasText: titleForLoggedinUser });
+    const loggedOutNavigation = page.getByRole("navigation").filter({ hasText: "conduit Home Sign in Sign up" });
+
+    
     await page.goto(baseUrl + "/register");
 
     const timestamp = Date.now();
@@ -35,34 +34,30 @@ test(
     const testPassword = "test1234";
     const testUsername = `User${timestamp}`;
 
-    await page.getByRole("textbox", { name: "Username" }).fill(testUsername);
-    await page.getByRole("textbox", { name: "Email" }).fill(testEmail);
-    await page.getByRole("textbox", { name: "Password" }).fill(testPassword);
-    await page.getByRole("button", { name: "Sign up" }).click();
+   
+    await usernameTextbox.fill(testUsername);
+    await emailTextbox.fill(testEmail);
+    await passwordTextbox.fill(testPassword);
+    await signUpButton.click();
 
-    await expect(
-      page.getByRole("navigation").filter({ hasText: titleForLoggedinUser })
-    ).toBeVisible();
+    
+    await expect(loggedInNavigation).toBeVisible();
 
-    await page.getByRole("link", { name: settings }).click();
+  
+    await settingsLink.click();
+    await logoutButton.click();
 
-    await page.getByRole("button", { name: logout }).click();
+   
+    await expect(loggedOutNavigation).toBeVisible();
 
-    await expect(
-      page
-        .getByRole("navigation")
-        .filter({ hasText: "conduit Home Sign in Sign up" })
-    ).toBeVisible();
-
+   
     await page.goto(baseUrl + "/login");
-    await page.getByRole("textbox", { name: emailField }).fill(testEmail);
-    await page.getByRole("textbox", { name: passwordField }).fill(testPassword);
-    await page.getByRole("button", { name: signInButton }).click();
+    await emailTextbox.fill(testEmail);
+    await passwordTextbox.fill(testPassword);
+    await signInButton.click();
 
-    await page
-      .getByRole("navigation")
-      .filter({ hasText: titleForLoggedinUser })
-      .click();
+    
+    await expect(loggedInNavigation).toBeVisible();
   }
 );
 
@@ -77,14 +72,17 @@ test(
   },
 
   async ({ page }) => {
+     const emailTextbox = page.getByRole("textbox", { name: "Email" });
+     const signInButton = page.getByRole("button", { name: "Sign in" });
+     const errorMessageForPassword = page.getByText("password can't be blank");
+
+
     await page.goto(baseUrl + "/login");
 
-    await page
-      .getByRole("textbox", { name: emailField })
-      .fill("test31@gmail.com");
-    await page.getByRole("button", { name: signInButton }).click();
+    await(emailTextbox).fill("test31@gmail.com");
+    await(signInButton ).click();
 
-    await expect(page.getByText(errorMessageForPassword)).toBeVisible();
+    await expect(errorMessageForPassword).toBeVisible();
 
     await expect(page).toHaveURL(baseUrl + "/login");
   }
@@ -101,12 +99,15 @@ test(
   },
 
   async ({ page }) => {
+    const passwordTextbox = page.getByRole("textbox", { name: "Password" });
+    const signInButton = page.getByRole("button", { name: "Sign in" });
+    const errorMessageForBlankEmail = page.getByText("email can't be blank");
     await page.goto(baseUrl + "/login");
 
-    await page.getByRole("textbox", { name: passwordField }).fill("test1234");
-    await page.getByRole("button", { name: signInButton }).click();
+    await(passwordTextbox).fill("test1234");
+    await(signInButton).click();
 
-    await expect(page.getByText(errorMessageForBlankEmail)).toBeVisible();
+    await expect(errorMessageForBlankEmail).toBeVisible();
 
     await expect(page).toHaveURL(baseUrl + "/login");
   }
@@ -115,7 +116,7 @@ test(
 test(
   "VAR-0009 Sign up with valid credentials",
   {
-    tag: ["@Regression"],
+    tag: ["@regression"],
     annotation: {
       type: "description",
       description: "Sign up with valid credentials",
@@ -123,19 +124,20 @@ test(
   },
 
   async ({ page }) => {
+    const usernameTextbox = page.getByRole("textbox", { name: "Username" });
+    const emailTextbox = page.getByRole("textbox", { name: "Email" });
+    const passwordTextbox = page.getByRole("textbox", { name: "Password" });
+    const signUpButton = page.getByRole("button", { name: "Sign up" });
+    const loggedInNavigation = page.getByRole("navigation").filter({ hasText: titleForLoggedinUser });
     await page.goto(baseUrl + "/register");
 
-    await page
-      .getByRole("textbox", { name: usernameField })
-      .fill(uniqueUsername);
-    await page.getByRole("textbox", { name: emailField }).fill(uniqueEmail);
-    await page.getByRole("textbox", { name: passwordField }).fill("test1234");
+    await usernameTextbox.fill(uniqueUsername);
+    await emailTextbox.fill(uniqueEmail);
+    await passwordTextbox.fill("test1234");
 
-    await page.getByRole("button", { name: signUpButton }).click();
+    await signUpButton.click();
 
-    await expect(
-      page.getByRole("navigation").filter({ hasText: titleForLoggedinUser })
-    ).toBeVisible();
+    await expect(loggedInNavigation).toBeVisible();
   }
 );
 
@@ -150,30 +152,34 @@ test(
   },
 
   async ({ page }) => {
+    const usernameTextbox = page.getByRole("textbox", { name: "Username" });
+    const emailTextbox = page.getByRole("textbox", { name: "Email" });
+    const passwordTextbox = page.getByRole("textbox", { name: "Password" });
+    const signUpButton = page.getByRole("button", { name: "Sign up" });
+    const loggedInNavigation = page.getByRole("navigation").filter({ hasText: titleForLoggedinUser });
+    const errorMessageForTakenEmail = page.getByText("email is already taken.");
     await page.goto(baseUrl + "/register");
 
     const testEmail = `best${timestamp}@gmail.com`;
     const testUsername = `User${timestamp}`;
 
-    await page.getByRole("textbox", {name: usernameField }).fill(testUsername);
-    await page.getByRole("textbox", {name: emailField }).fill(testEmail);
-    await page.getByRole("textbox", {name: passwordField }).fill("test1234");
+    await usernameTextbox.fill(testUsername);
+    await emailTextbox.fill(testEmail);
+    await passwordTextbox.fill("test1234");
 
-    await page.getByRole("button", {name: signUpButton }).click();
+    await signUpButton.click();
 
-    await expect(
-      page.getByRole("navigation").filter({hasText: titleForLoggedinUser })
-    ).toBeVisible();
+    await expect(loggedInNavigation).toBeVisible();
 
     await page.goto(baseUrl + "/register");
 
     const newUsername = `NewUser${timestamp}`;
-    await page.getByRole("textbox", { name: usernameField }).fill(newUsername);
-    await page.getByRole("textbox", { name: emailField }).fill(testEmail); // Той же email!
-    await page.getByRole("textbox", { name: passwordField }).fill("test1234");
-    await page.getByRole("button", { name: signUpButton }).click();
+    await usernameTextbox.fill(newUsername);
+    await emailTextbox.fill(testEmail); // Той же email!
+    await passwordTextbox.fill("test1234");
+    await signUpButton.click();
 
-    await expect(page.getByText(errorMessageForTakenEmail)).toBeVisible();
+    await expect(errorMessageForTakenEmail).toBeVisible();
   }
 );
 
@@ -190,14 +196,19 @@ test(
   },
 
   async ({ page }) => {
+    const usernameTextbox = page.getByRole("textbox", { name: "Username" });
+    const emailTextbox = page.getByRole("textbox", { name: "Email" });
+    const passwordTextbox = page.getByRole("textbox", { name: "Password" });
+    const signUpButton = page.getByRole("button", { name: "Sign up" });
+    const errorMessageForInvalidEmail = page.getByText("email is invalid");
     await page.goto(baseUrl+"/register");
 
-    await page.getByRole("textbox", {name: usernameField }).fill(uniqueUsername);
-    await page.getByRole("textbox", {name: emailField}).fill("DiCaprio");
-    await page.getByRole("textbox", {name: passwordField}).fill("test1234");
+    await usernameTextbox.fill(uniqueUsername);
+    await emailTextbox.fill("DiCaprio");
+    await passwordTextbox.fill("test1234");
 
-    await page.getByRole("button", {name: signUpButton}).click();
+    await signUpButton.click();
 
-    await expect(page.getByText(errorMessageForInvalidEmail)).toBeVisible();
+    await expect(errorMessageForInvalidEmail).toBeVisible();
   }
 );

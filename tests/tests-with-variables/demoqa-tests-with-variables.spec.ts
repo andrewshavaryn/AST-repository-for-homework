@@ -13,28 +13,29 @@ test(
   },
 
   async ({ page }) => {
-    const userNameField = "//*[@id='userName']";
-    const userEmailField = "//*[@id='userEmail']";
-    const currentAddressField = "//*[@id='currentAddress']";
-    const permanentAddressField = "//*[@id='permanentAddress']";
-    const submitButton = "//*[@id='submit']";
-    const outputSection = "//div[@id='output']";
+    const userNameField = page.locator("//*[@id='userName']");
+    const userEmailField = page.locator("//*[@id='userEmail']");
+    const currentAddressField = page.locator("//*[@id='currentAddress']");
+    const permanentAddressField = page.locator("//*[@id='permanentAddress']");
+    const submitButton = page.locator("//*[@id='submit']");
+    const outputSection = page.locator("//div[@id='output']");
+
     await page.goto(baseUrl + "/text-box");
 
-    await expect(page.locator(userNameField)).toBeVisible();
-    await page.locator(userNameField).fill("Andrew");
+    await expect(userNameField).toBeVisible();
+    await userNameField.fill("Andrew");
 
-    await expect(page.locator(userEmailField)).toBeVisible();
-    await page.locator(userEmailField).fill("andrewtest@gmail.com");
+    await expect(userEmailField).toBeVisible();
+    await userEmailField.fill("andrewtest@gmail.com");
 
-    await expect(page.locator(currentAddressField)).toBeVisible();
-    await page.locator(currentAddressField).fill("Paradise City");
+    await expect(currentAddressField).toBeVisible();
+    await currentAddressField.fill("Paradise City");
 
-    await expect(page.locator(permanentAddressField)).toBeVisible();
-    await page.locator(permanentAddressField).fill("Unvgvar, Ukraine");
+    await expect(permanentAddressField).toBeVisible();
+    await permanentAddressField.fill("Unvgvar, Ukraine");
 
-    await page.locator(submitButton).click();
-    await expect(page.locator(outputSection)).toBeVisible();
+    await submitButton.click();
+    await expect(outputSection).toBeVisible();
   }
 );
 
@@ -49,41 +50,41 @@ test(
   },
 
   async ({ page }) => {
-    const expandAllCheckboxes = "//button[@title='Expand all']";
-    const checkAllCheckboxes = "//span[text()='Home']/..//span[@class='rct-checkbox']";
+    const expandAllCheckboxes = page.locator("//button[@title='Expand all']");
+    const checkAllCheckboxes = page.locator(
+      "//span[text()='Home']/..//span[@class='rct-checkbox']"
+    );
     await page.goto(baseUrl + "/checkbox");
 
-    await page.locator(expandAllCheckboxes).click();
+    await expandAllCheckboxes.click();
 
-    await page.locator(checkAllCheckboxes).click();
+    await checkAllCheckboxes.click();
 
     const labels = [
-      "Home",
-      "Desktop",
-      "Notes",
-      "Commands",
-      "Documents",
-      "WorkSpace",
-      "React",
-      "Angular",
-      "Veu",
-      "Office",
-      "Public",
-      "Private",
-      "Classified",
-      "General",
-      "Downloads",
-      "Word File.doc",
-      "Excel File.doc",
+      page.getByLabel("Home"),
+      page.getByLabel("Desktop"),
+      page.getByLabel("Notes"),
+      page.getByLabel("Commands"),
+      page.getByLabel("Documents"),
+      page.getByLabel("WorkSpace"),
+      page.getByLabel("React"),
+      page.getByLabel("Angular"),
+      page.getByLabel("Veu"),
+      page.getByLabel("Office"),
+      page.getByLabel("Public"),
+      page.getByLabel("Private"),
+      page.getByLabel("Classified"),
+      page.getByLabel("General"),
+      page.getByLabel("Downloads"),
+      page.getByLabel("Word File.doc"),
+      page.getByLabel("Excel File.doc"),
     ];
 
     for (const label of labels) {
-      await expect(page.getByLabel(label)).toBeChecked();
+      await expect(label).toBeChecked();
     }
   }
 );
-
-
 
 test(
   "VAR-0014 All radio buttons can be selected one by one",
@@ -96,21 +97,21 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto(baseUrl+"/radio-button");
-    const yesRadio = "//label[@for='yesRadio']";
-    const impressiveRadio = "//label[@for='impressiveRadio']";
-    const noRadio = "//input[@id='noRadio']";
+    await page.goto(baseUrl + "/radio-button");
+    const yesRadio = page.locator("//label[@for='yesRadio']");
+    const impressiveRadio = page.locator("//label[@for='impressiveRadio']");
+    const noRadio = page.locator("//input[@id='noRadio']");
 
-    await page.locator(yesRadio).click();
+    await yesRadio.click();
     await expect(page.locator("//input[@id='yesRadio']")).toBeChecked();
     await expect(
       page.locator("//p[contains(text(), 'You have selected')]")
     ).toBeVisible();
 
-    await page.locator(impressiveRadio).click();
+    await impressiveRadio.click();
     await expect(page.locator("//input[@id='impressiveRadio']")).toBeChecked();
     await expect(page.locator("//span[text()='Impressive']")).toBeVisible();
 
-    await expect(page.locator(noRadio)).toBeDisabled();
+    await expect(noRadio).toBeDisabled();
   }
 );
