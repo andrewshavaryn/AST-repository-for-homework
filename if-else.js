@@ -63,8 +63,7 @@ if (temperature < 8) {
 
 
 
-const studentScore = 76
-
+const studentScore = 99
 if (typeof studentScore !== 'number') {
     throw new Error('Invalid score: not a valid number');
 } else if (studentScore < 0 || studentScore > 100) {

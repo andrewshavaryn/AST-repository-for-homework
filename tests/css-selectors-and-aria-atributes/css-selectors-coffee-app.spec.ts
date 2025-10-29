@@ -232,15 +232,15 @@ test(
   },
 
   async ({ page }) => {
-    await page.goto("/");
+ await page.goto("https://coffee-cart.app/");
 
-    for(let i = 0; i <= 10; i = i++ ){
-    await page.locator('[aria-label="Espresso"]').click();
+  for (let i = 1; i <= 100; i++) {
+    await page.locator('[data-test="Espresso"]').click();
     await page.locator('[data-test="Espresso_Macchiato"]').click();
     await expect(page.locator('[aria-label="Cart page"]')).toContainText(
-    String(i * 2)
-  );
-}
+      String(i * 2)
+    );
+  }
     await page.locator('[aria-label="Proceed to checkout"]').click();
 
     await page.locator('input[name="name"]').fill("andrew");
