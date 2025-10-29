@@ -1,22 +1,11 @@
 import { test, expect } from "@playwright/test";
 
 const baseURL = "https://coffee-cart.app";
-const promoMessage = "It's your lucky day! Get an extra cup of Mocha for $4.";
-const promoAcceptButton = "Yes, of course!";
-const successMessage = "Thanks for your purchase.";
-const espresso = '[data-test="Espresso"]';
-const flatWhite = '[data-test="Flat_White"]';
-const americano = '[data-test="Americano"]';
 const espressoMacchiato = '[data-test="Espresso_Macchiato"]';
 const cappuccino = '[data-test="Cappuccino"]';
 const mocha = '[data-test="Mocha"]';
 const cafeLatte = '[data-test="Cafe_Latte"]';
 const espressoConPanna = '[data-test="Espresso_Con Panna"]';
-const checkout = '[data-test="checkout"]';
-const nameField = "Name";
-const emailField = "Email";
-const promoCheckbox = "Promotion checkbox";
-const submitButton = "Submit";
 const yesPromoButton = "Yes, of course!";
 const skipButton = "Nah, I'll skip.";
 const app = "#app";
@@ -37,6 +26,18 @@ test(
 
   async ({ page }) => {
     await page.goto(baseURL);
+    const espresso = page.locator('[data-test="Espresso"]');
+    const flatWhite = page.locator('[data-test="Flat_White"]');
+    const americano = page.locator('[data-test="Americano"]');
+    const promoMessage = page.getByText("It's your lucky day! Get an extra cup of Mocha for $4.");
+    const promoAcceptButton = page.getByRole("button", { name: "Yes, of course!" });
+    const checkout = page.locator('[data-test="checkout"]');
+    const successMessage = page.getByRole("button", { name: "Thanks for your purchase."});
+    const nameField = page.getByRole("textbox", { name: "Name"});
+    const emailField = page.getByRole("textbox", { name: "Emai"});
+    const promoCheckbox = page.getByRole("checkbox", { name: "Promotion checkbox" });
+    const submitButton = page.getByRole("button", { name: "Submit"});
+    
 
     await espresso.click();
     await flatWhite.click();
@@ -44,19 +45,15 @@ test(
 
     await expect(promoMessage).toBeVisible();
 
-    await page.getByRole("button", { name: promoAcceptButton }).click();
-    await page.locator(checkout).click();
+    await promoAcceptButton.click();
+    await checkout.click();
 
-    await page.getByRole("textbox", { name: nameField }).fill("andrew");
-    await page
-      .getByRole("textbox", { name: emailField })
-      .fill("andrew@gmail.com");
-    await page.getByRole("checkbox", { name: promoCheckbox }).check();
-    await page.getByRole("button", { name: submitButton }).click();
+    await nameField.fill("andrew");
+    await emailField.fill("andrew@gmail.com");
+    await promoCheckbox.check();
+    await submitButton.click();
 
-    await expect(
-      page.getByRole("button", { name: successMessage })
-    ).toBeVisible();
+    await expect(successMessage).toBeVisible();
   }
 );
 
