@@ -217,3 +217,39 @@ test(
     await expect(page.getByText("Flat White$18.00 x 1")).toBeVisible();
   }
 );
+
+
+
+
+test(
+  "CSS-0006 Order with 3 products and promotion product and with loops",
+  {
+    tag: ["@regression"],
+    annotation: {
+      type: "description",
+      description: "examples with loops",
+    },
+  },
+
+  async ({ page }) => {
+    await page.goto("/");
+
+    for(let i = 0; i <= 10; i = i++ ){
+    await page.locator('[aria-label="Espresso"]').click();
+    await page.locator('[data-test="Espresso_Macchiato"]').click();
+    await expect(page.locator('[aria-label="Cart page"]')).toContainText(
+    String(i * 2)
+  );
+}
+    await page.locator('[aria-label="Proceed to checkout"]').click();
+
+    await page.locator('input[name="name"]').fill("andrew");
+    await page.locator('input[type="email"]').fill("andrew@gmail.com");
+
+    await page.locator('[aria-label="Promotion checkbox"]').check();
+
+    await page.locator('button[type="submit"]').click();
+
+    await expect(page.locator(".snackbar.success")).toBeVisible();
+  }
+);
