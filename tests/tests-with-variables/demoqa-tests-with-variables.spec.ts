@@ -13,19 +13,19 @@ test(
   },
 
   async ({ page }) => {
-    const userNameField = page.locator("//*[@id='userName']"); //перейменувати Field на Input;
-    const userEmailField = page.locator("//*[@id='userEmail']");
-    const currentAddressField = page.locator("//*[@id='currentAddress']");
-    const permanentAddressField = page.locator("//*[@id='permanentAddress']");
+    const userNameInput = page.locator("//*[@id='userName']");
+    const userEmailInput = page.locator("//*[@id='userEmail']");
+    const currentAddressInput = page.locator("//*[@id='currentAddress']");
+    const permanentAddressInput = page.locator("//*[@id='permanentAddress']");
     const submitButton = page.locator("//*[@id='submit']");
     const outputSection = page.locator("//div[@id='output']");
 
     await page.goto(baseUrl + "/text-box");
 
-    await userNameField.fill("Andrew");
-    await userEmailField.fill("andrewtest@gmail.com");
-    await currentAddressField.fill("Paradise City");
-    await permanentAddressField.fill("Unvgvar, Ukraine");
+    await userNameInput.fill("Andrew");
+    await userEmailInput.fill("andrewtest@gmail.com");
+    await currentAddressInput.fill("Paradise City");
+    await permanentAddressInput.fill("Unvgvar, Ukraine");
 
     await submitButton.click();
     await expect(outputSection).toBeVisible();
@@ -47,34 +47,32 @@ test(
     const checkAllCheckboxes = page.locator(
       "//span[text()='Home']/..//span[@class='rct-checkbox']"
     );
+    const checkboxLabels = [
+      "Home",
+      "Desktop",
+      "Notes",
+      "Commands",
+      "Documents",
+      "WorkSpace",
+      "React",
+      "Angular",
+      "Veu",
+      "Office",
+      "Public",
+      "Private",
+      "Classified",
+      "General",
+      "Downloads",
+      "Word File.doc",
+      "Excel File.doc",
+    ].map((label) => page.getByLabel(label));
+
     await page.goto(baseUrl + "/checkbox");
-
     await expandAllCheckboxes.click();
-
     await checkAllCheckboxes.click();
 
-    const labels = [
-      page.getByLabel("Home"),
-      page.getByLabel("Desktop"),
-      page.getByLabel("Notes"),
-      page.getByLabel("Commands"),
-      page.getByLabel("Documents"),
-      page.getByLabel("WorkSpace"),
-      page.getByLabel("React"),
-      page.getByLabel("Angular"),
-      page.getByLabel("Veu"),
-      page.getByLabel("Office"),
-      page.getByLabel("Public"),
-      page.getByLabel("Private"),
-      page.getByLabel("Classified"),
-      page.getByLabel("General"),
-      page.getByLabel("Downloads"),
-      page.getByLabel("Word File.doc"),
-      page.getByLabel("Excel File.doc"),
-    ];
-
-    for (const label of labels) {
-      await expect(label).toBeChecked(); //переписати з pagegetbyLabel один раз, а не багато
+     for (const checkbox of checkboxLabels) {
+      await expect(checkbox).toBeChecked();
     }
   }
 );
@@ -93,8 +91,12 @@ test(
     await page.goto(baseUrl + "/radio-button");
     const yesRadioLabel = page.locator("//label[@for='yesRadio']");
     const yesRadioInput = page.locator("//input[@id='yesRadio']");
-    const yesChoosenRadio = page.locator("//p[contains(text(), 'You have selected')]");
-    const impressiveRadioLabel = page.locator("//label[@for='impressiveRadio']");
+    const yesChoosenRadio = page.locator(
+      "//p[contains(text(), 'You have selected')]"
+    );
+    const impressiveRadioLabel = page.locator(
+      "//label[@for='impressiveRadio']"
+    );
     const impressiveRadioInput = page.locator("//input[@id='impressiveRadio']");
     const impressiveChoosenRadio = page.locator("//span[text()='Impressive']");
     const noRadio = page.locator("//input[@id='noRadio']");
