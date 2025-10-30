@@ -1,18 +1,6 @@
 import { test, expect } from "@playwright/test";
 
 const baseURL = "https://coffee-cart.app";
-const espressoMacchiato = '[data-test="Espresso_Macchiato"]';
-const cappuccino = '[data-test="Cappuccino"]';
-const mocha = '[data-test="Mocha"]';
-const cafeLatte = '[data-test="Cafe_Latte"]';
-const espressoConPanna = '[data-test="Espresso_Con Panna"]';
-const yesPromoButton = "Yes, of course!";
-const skipButton = "Nah, I'll skip.";
-const app = "#app";
-const cart = "Cart page";
-const promoItem = (quantity: number) => `(Discounted) Mocha$4.00 x ${quantity}`;
-const menu = "Menu page";
-const emptyCart = "No coffee, go add some.";
 
 test(
   "VAR-0001 Order with 3 products and promotion product",
@@ -29,15 +17,22 @@ test(
     const espresso = page.locator('[data-test="Espresso"]');
     const flatWhite = page.locator('[data-test="Flat_White"]');
     const americano = page.locator('[data-test="Americano"]');
-    const promoMessage = page.getByText("It's your lucky day! Get an extra cup of Mocha for $4.");
-    const promoAcceptButton = page.getByRole("button", { name: "Yes, of course!" });
+    const promoMessage = page.getByText(
+      "It's your lucky day! Get an extra cup of Mocha for $4."
+    );
+    const promoAcceptButton = page.getByRole("button", {
+      name: "Yes, of course!",
+    });
     const checkout = page.locator('[data-test="checkout"]');
-    const successMessage = page.getByRole("button", { name: "Thanks for your purchase."});
-    const nameField = page.getByRole("textbox", { name: "Name"});
-    const emailField = page.getByRole("textbox", { name: "Emai"});
-    const promoCheckbox = page.getByRole("checkbox", { name: "Promotion checkbox" });
-    const submitButton = page.getByRole("button", { name: "Submit"});
-    
+    const successMessage = page.getByRole("button", {
+      name: "Thanks for your purchase.",
+    });
+    const nameField = page.getByRole("textbox", { name: "Name" });
+    const emailField = page.getByRole("textbox", { name: "Emai" });
+    const promoCheckbox = page.getByRole("checkbox", {
+      name: "Promotion checkbox",
+    });
+    const submitButton = page.getByRole("button", { name: "Submit" });
 
     await espresso.click();
     await flatWhite.click();
@@ -72,16 +67,24 @@ test(
   async ({ page }) => {
     const cartContent =
       "Cappuccino x 1+-Espresso x 1+-Espresso Macchiato x 1+-";
+    const espressoMacchiato = page.locator('[data-test="Espresso_Macchiato"]');
+    const espresso = page.locator('[data-test="Espresso"]');
+    const cappuccino = page.locator('[data-test="Cappuccino"]');
+    const promoMessage = page.getByText(
+      "It's your lucky day! Get an extra cup of Mocha for $4."
+    );
+    const app = page.locator("#app");
+    const skipButton = page.getByRole("button", { name: "Nah, I'll skip." });
+
     await page.goto(baseURL);
-    await page.locator(espresso).click();
-    await page.locator(espressoMacchiato).click();
-    await page.locator(cappuccino).click();
+    await espresso.click();
+    await espressoMacchiato.click();
+    await cappuccino.click();
 
-    await expect(page.getByText(promoMessage)).toBeVisible();
+    await expect(promoMessage).toBeVisible();
 
-    await expect(page.locator(app)).toContainText(skipButton);
-    await page.getByRole("button", { name: skipButton }).click();
-    await expect(page.locator(app)).toContainText(cartContent);
+    await skipButton.click();
+    await expect(app).toContainText(cartContent);
   }
 );
 
@@ -97,36 +100,53 @@ test(
 
   async ({ page }) => {
     await page.goto(baseURL);
+    const espressoMacchiato = page.locator('[data-test="Espresso_Macchiato"]');
+    const espresso = page.locator('[data-test="Espresso"]');
+    const cappuccino = page.locator('[data-test="Cappuccino"]');
+    const promoMessage = page.getByText(
+      "It's your lucky day! Get an extra cup of Mocha for $4."
+    );
+    const yesPromoButton = page.getByRole("button", {
+      name: "Yes, of course!",
+    });
+    const cart = page.getByRole("link", { name: "Cart page" });
+    const promoItem = (quantity: number) =>
+      `(Discounted) Mocha$4.00 x ${quantity}`;
+    const menu = page.getByRole("link", { name: "Menu page" });
+    const mocha = page.locator('[data-test="Mocha"]');
+    const flatWhite = page.locator('[data-test="Flat_White"]');
+    const cafeLatte = page.locator('[data-test="Cafe_Latte"]');
+    const espressoConPanna = page.locator('[data-test="Espresso_Con Panna"]');
 
-    await page.locator(espresso).click();
-    await page.locator(espressoMacchiato).click();
-    await page.locator(cappuccino).click();
+    await espresso.click();
+    await espressoMacchiato.click();
+    await cappuccino.click();
 
-    await expect(page.getByText(promoMessage)).toBeVisible();
+    await expect(promoMessage).toBeVisible();
 
-    await page.getByRole("button", { name: yesPromoButton }).click();
-    await page.getByRole("link", { name: cart }).click();
+    await yesPromoButton.click();
+    await cart.click();
 
     await expect(page.getByText(promoItem(1))).toBeVisible();
-    await page.getByRole("link", { name: menu }).click();
+    await menu.click();
 
-    await page.locator(mocha).click();
-    await page.locator(flatWhite).click();
+    await mocha.click();
+    await flatWhite.click();
 
-    await expect(page.getByText(promoMessage)).toBeVisible();
+    await expect(promoMessage).toBeVisible();
 
-    await page.getByRole("button", { name: yesPromoButton }).click();
-    await page.getByRole("link", { name: cart }).click();
+    await yesPromoButton.click();
+    await cart.click();
 
     await expect(page.getByText(promoItem(2))).toBeVisible();
-    await page.getByRole("link", { name: menu }).click();
+    await menu.click();
 
-    await page.locator(cafeLatte).click();
-    await page.locator(espressoConPanna).click();
+    await cafeLatte.click();
+    await espressoConPanna.click();
 
-    await expect(page.getByText(promoMessage)).toBeVisible();
+    await expect(promoMessage).toBeVisible();
 
-    await page.getByRole("button", { name: yesPromoButton }).click();
+    await yesPromoButton.click();
 
     await page.getByRole("listitem").filter({ hasText: "cart (10)" }).click();
     await expect(page.getByText(promoItem(3))).toBeVisible();
@@ -145,10 +165,20 @@ test(
 
   async ({ page }) => {
     await page.goto(baseURL);
+    const flatWhite = page.locator('[data-test="Flat_White"]');
+    const americano = page.locator('[data-test="Americano"]');
+    const cart = page.getByRole("link", { name: "Cart page" });
+    const emptyCart = page.getByText("No coffee, go add some.");
+    const removeAmericano = page.getByRole("button", {
+      name: "Remove all Americano",
+    });
+    const removeFlatWhite = page.getByRole("button", {
+      name: "Remove all Flat White",
+    });
 
-    await page.locator(flatWhite).click();
-    await page.locator(americano).click();
-    await page.getByRole("link", { name: cart }).click();
+    await flatWhite.click();
+    await americano.click();
+    await cart.click();
 
     await expect(
       page
@@ -157,7 +187,7 @@ test(
         .nth(1)
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "Remove all Americano" }).click();
+    await removeAmericano.click();
 
     await expect(
       page
@@ -166,64 +196,68 @@ test(
         .nth(1)
     ).toBeVisible();
 
-    await page.getByRole("button", { name: "Remove all Flat White" }).click();
+    await removeFlatWhite.click();
 
-    await expect(
-      page.locator("div").filter({ hasText: emptyCart }).first()
-    ).toBeVisible();
+    await expect(emptyCart).toBeVisible();
   }
 );
 
 test(
   "VAR-0005 User can increase and reduce quantity of products in the Cart",
   {
-    tag: ["@іmoke"],
+    tag: ["@smoke"],
     annotation: {
       type: "description",
       description: "Cart functionality",
     },
   },
   async ({ page }) => {
-    const addOneEspressoMacchiato = "Add one Espresso Macchiato";
-    const removeOneEspressoMacchiato = "Remove one Espresso Macchiato";
-    const addOneFlatWhite = "Add one Flat White";
-    const removeOneFlatWhite = "Remove one Flat White";
+    const espressoMacchiato = page.locator('[data-test="Espresso_Macchiato"]');
+    const flatWhite = page.locator('[data-test="Flat_White"]');
+    const cart = page.getByRole("link", { name: "Cart page" });
+    const addOneEspressoMacchiato = page.getByRole("button", {
+      name: "Add one Espresso Macchiato",
+    });
+    const removeOneEspressoMacchiato = page.getByRole("button", {
+      name: "Remove one Espresso Macchiato",
+    });
+    const addOneFlatWhite = page.getByRole("button", {
+      name: "Add one Flat White",
+    });
+    const removeOneFlatWhite = page.getByRole("button", {
+      name: "Remove one Flat White",
+    });
+    const espressoMacchiatoQuantity = (quantity: number) =>
+      page.getByText(`Espresso Macchiato$12.00 x ${quantity}`);
+    const flatWhiteQuantity = (quantity: number) =>
+      page.getByText(`Flat White$18.00 x ${quantity}`);
+    const cartItems = page
+      .locator("div")
+      .filter({ hasText: "Espresso Macchiato x 1+-Flat" })
+      .nth(1);
     await page.goto(baseURL);
 
-    await page.locator(espressoMacchiato).click();
-    await page.locator(flatWhite).click();
+    await espressoMacchiato.click();
+    await flatWhite.click();
 
-    await page.getByRole("link", { name: cart }).click();
+    await cart.click();
+    await expect(cartItems).toBeVisible();
 
-    await expect(
-      page
-        .locator("div")
-        .filter({ hasText: "Espresso Macchiato x 1+-Flat" })
-        .nth(1)
-    ).toBeVisible();
+    await addOneEspressoMacchiato.click();
+    await expect(espressoMacchiatoQuantity(2)).toBeVisible();
 
-    await page.getByRole("button", {name: addOneEspressoMacchiato }).click();
+    await addOneEspressoMacchiato.click();
+    await expect(espressoMacchiatoQuantity(3)).toBeVisible();
 
-    await expect(page.getByText("Espresso Macchiato$12.00 x 2")).toBeVisible();
+    await removeOneEspressoMacchiato.click();
+    await expect(espressoMacchiatoQuantity(2)).toBeVisible();
 
-    await page.getByRole("button", {name: addOneEspressoMacchiato }).click();
+    await flatWhiteQuantity(1).click();
 
-    await expect(page.getByText("Espresso Macchiato$12.00 x 3")).toBeVisible();
+    await addOneFlatWhite.click();
+    await expect(flatWhiteQuantity(2)).toBeVisible();
 
-    await page
-      .getByRole("button", { name: removeOneEspressoMacchiato })
-      .click();
-
-    await expect(page.getByText("Espresso Macchiato$12.00 x 2")).toBeVisible();
-
-    await page.getByText("Flat White$18.00 x 1+-$18.00x").click();
-
-    await page.getByRole("button", { name: addOneFlatWhite }).click();
-
-    await expect(page.getByText("Flat White$18.00 x 2+-$36.00x")).toBeVisible();
-
-    await page.getByRole("button", { name: removeOneFlatWhite }).click();
-
-    await expect(page.getByText("Flat White$18.00 x 1+-$18.00x")).toBeVisible();
+    await removeOneFlatWhite.click();
+    await expect(flatWhiteQuantity(1)).toBeVisible();
   }
 );
