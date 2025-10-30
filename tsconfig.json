@@ -13,6 +13,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["tests/**/*", "playwright.config.ts"],
+  "include": ["tests/**/*", "playwright.config.ts", "hw-with-loops-and-if-else/task-2.js"],
   "exclude": ["node_modules"]
 }
