@@ -82,6 +82,11 @@ export default defineConfig({
       },
     },
 
+    {
+      name: "tests-with-if-else-and-loops",
+      testDir: "tests/tests-with-if-else-and-loops",
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
