@@ -8,7 +8,7 @@ Task 1
 - "Число непарне."
 */
 
-let number = 4;
+const number = 4;
 
 if (isNaN(number)) {
   console.log("Будь ласка, введи коректне число!");
