@@ -83,8 +83,8 @@ export default defineConfig({
     },
 
     {
-      name: "tests-with-if-else-and-loops",
-      testDir: "tests/tests-with-if-else-and-loops",
+      name: "unit-tests-with-functions",
+      testDir: "tests/unit-tests-with-functions",
     },
 
     /* Test against mobile viewports. */
