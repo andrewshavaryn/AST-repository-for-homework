@@ -9,9 +9,8 @@ Task 2
 - Якщо год > 18: "Доброго вечора!"
 */
 
-const time = 15;
-
-if (isNaN(time) || typeof time !== "number" ) {
+export function sayHiByHour(time) {
+  if (isNaN(time) || typeof time !== "number" ) {
   console.log("Будь ласка, введи коректний час!");
 } else if (time < 0 || time > 24) {
   console.log("Будь ласка, введи час в діапазоні з 00:00 до 24:00!");
@@ -22,3 +21,8 @@ if (isNaN(time) || typeof time !== "number" ) {
 } else if (time > 18 && time <= 24) {
   console.log("Доброго вечора!");
 }
+}
+
+sayHiByHour(21);
+
+
