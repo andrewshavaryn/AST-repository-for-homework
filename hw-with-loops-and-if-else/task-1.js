@@ -10,7 +10,7 @@ Task 1
 
 const number = 4;
 
-if (isNaN(number)) {
+if (isNaN(number) || typeof number !== "number") {
   console.log("Будь ласка, введи коректне число!");
 } else if (number % 2 === 0) {
   console.log("Число парне");
