@@ -11,7 +11,7 @@ Task 4
 
 const age = 17;
 
-if (isNaN(age)) {
+if (isNaN(age) || typeof age !== "number" ) {
   console.log("Invalid age, please enter age as a Number");
 } else if (age < 0) {
   console.log("Invalid age: should be not less than 0");

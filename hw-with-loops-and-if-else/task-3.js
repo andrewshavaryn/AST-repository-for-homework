@@ -6,9 +6,9 @@ Task 3
 Вхід: Бал (наприклад, 42)
 */
 
-const studentScore = 42;
+const studentScore = "42";
 
-if (isNaN(studentScore)) {
+if (isNaN(studentScore) || typeof studentScore !== "number" ) {
   console.log("Invalid score, please enter score as a Number");
 } else if (studentScore < 0) {
   console.log("Invalid score: should be not less than 0");

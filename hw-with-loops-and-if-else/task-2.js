@@ -11,7 +11,7 @@ Task 2
 
 const time = 15;
 
-if (isNaN(time)) {
+if (isNaN(time) || typeof time !== "number" ) {
   console.log("Будь ласка, введи коректний час!");
 } else if (time < 0 || time > 24) {
   console.log("Будь ласка, введи час в діапазоні з 00:00 до 24:00!");
