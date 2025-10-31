@@ -13,6 +13,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["tests/**/*", "playwright.config.ts", "hw-with-loops-and-if-else/task-2-greetings-by-time.js"],
+  "include": ["tests/**/*", "playwright.config.ts", "hw-with-loops-and-functions/task-2-greetings-by-time.ts"],
   "exclude": ["node_modules"]
 }
