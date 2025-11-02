@@ -12,13 +12,13 @@ Task 2
 export function sayHiByHour(time: number) {
   if (isNaN(time) || typeof time !== "number") {
     return "Будь ласка, введи коректний час!";
-  } else if (time < 0 || time > 24) {
-    return "Будь ласка, введи час в діапазоні з 00:00 до 24:00!";
+  } else if (time < 0 || time > 23) {
+    return "Будь ласка, введи час в діапазоні з 00:00 до 23:59!";
   } else if (time >= 0 && time < 12) {
     return "Доброго ранку!";
   } else if (time >= 12 && time <= 18) {
     return "Доброго дня!";
-  } else if (time > 18 && time <= 24) {
+  } else if (time > 18 && time <= 23) {
     return "Доброго вечора!";
   }
 }
