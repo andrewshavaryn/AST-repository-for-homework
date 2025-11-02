@@ -6,9 +6,8 @@
 Вхід: Колір світлофора (наприклад, "жовтий")
 */
 
-let trafficLightColor = "yellow";
-
-if (trafficLightColor === "yellow") {
+function verifyColorOfTrafficLight(trafficLightColor: string) {
+  if (trafficLightColor === "yellow") {
   console.log("Підготуйтесь");
 } else if (trafficLightColor === "green") {
   console.log("Переходьте");
@@ -17,3 +16,8 @@ if (trafficLightColor === "yellow") {
 } else {
   console.log("Світлофор зламався, будьте обережні");
 }
+};
+
+verifyColorOfTrafficLight("yellow");
+
+
