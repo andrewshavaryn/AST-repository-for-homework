@@ -11,18 +11,16 @@ Task 2
 
 export function sayHiByHour(time: number) {
   if (isNaN(time) || typeof time !== "number") {
-    console.log("Будь ласка, введи коректний час!");
+    return "Будь ласка, введи коректний час!";
   } else if (time < 0 || time > 24) {
-    console.log("Будь ласка, введи час в діапазоні з 00:00 до 24:00!");
+    return "Будь ласка, введи час в діапазоні з 00:00 до 24:00!";
   } else if (time >= 0 && time < 12) {
-    console.log("Доброго ранку!");
+    return "Доброго ранку!";
   } else if (time >= 12 && time <= 18) {
-    console.log("Доброго дня!");
+    return "Доброго дня!";
   } else if (time > 18 && time <= 24) {
-    console.log("Доброго вечора!");
+    return "Доброго вечора!";
   }
 }
 
 sayHiByHour(15);
-
-

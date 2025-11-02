@@ -83,8 +83,8 @@ export default defineConfig({
     },
 
     {
-      name: "hw-with-loops-and-functions",
-      testDir: "hw-with-loops-and-functions",
+      name: "unit-tests-with-functions",
+      testDir: "tests/unit-tests-with-functions",
     },
 
     /* Test against mobile viewports. */
