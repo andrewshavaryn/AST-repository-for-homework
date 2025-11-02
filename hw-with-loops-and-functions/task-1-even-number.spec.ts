@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
 
-import { isEvenNumber } from './task-1-even-number';
+import { isEvenNumber } from "./task-1-even-number";
 
 test("task-1: парне число", async () => {
   const result = isEvenNumber(4);
@@ -14,7 +14,7 @@ test("task-1: непарне число", async () => {
   console.log(result);
 });
 
-test("task-1: невалідне число", async () => {
+test("task-1: NaN це невалідне число", async () => {
   const result = isEvenNumber(NaN);
   expect(result).toBe("Будь ласка, введи коректне число!");
   console.log(result);
