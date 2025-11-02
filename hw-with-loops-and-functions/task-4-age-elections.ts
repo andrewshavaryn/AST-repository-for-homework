@@ -20,4 +20,4 @@ export function isAgeForElections(age: number) {
   }
 }
 
-isAgeForElections(21);
+isAgeForElections(17);
