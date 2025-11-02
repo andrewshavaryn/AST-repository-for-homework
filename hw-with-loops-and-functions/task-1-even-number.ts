@@ -10,11 +10,11 @@ Task 1
 
 export function isEvenNumber(number: number) {
   if (isNaN(number) || typeof number !== "number") {
-    console.log("Будь ласка, введи коректне число!");
+    return("Будь ласка, введи коректне число!");
   } else if (number % 2 === 0) {
-    console.log("Число парне");
+    return("Число парне");
   } else {
-    console.log("Число непарне");
+    return("Число непарне");
   }
 }
 
