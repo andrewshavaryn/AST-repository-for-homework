@@ -8,7 +8,7 @@ Task 1
 - "Число непарне."
 */
 
-function isEvenNumber(number: number) {
+export function isEvenNumber(number: number) {
   if (isNaN(number) || typeof number !== "number") {
     console.log("Будь ласка, введи коректне число!");
   } else if (number % 2 === 0) {
