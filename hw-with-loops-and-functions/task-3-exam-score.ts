@@ -6,7 +6,7 @@ Task 3
 Вхід: Бал (наприклад, 42)
 */
 
-function verifyStudentScore (studentScore: number) { 
+export function verifyStudentScore (studentScore: number) { 
   if (isNaN(studentScore) || typeof studentScore !== "number" ) {
   console.log("Invalid score, please enter score as a Number");
 } else if (studentScore < 0) {
