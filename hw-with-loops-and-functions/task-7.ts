@@ -1,0 +1,25 @@
+/*
+7. Визначення типу числа
+Напишіть програму, яка визначає, чи число додатнє, від’ємне або дорівнює нулю.
+Вхід: Число (наприклад, -5)
+Вихід:
+- "Число додатнє."
+- "Число від’ємне."
+- "Число дорівнює нулю."
+*/
+
+let number = -5;
+
+function verifyTypeOfNumber() {
+  if (typeof number !== "number" || isNaN(number)) {
+    console.log("Введіть числове значення");
+  } else if (number > 0) {
+    console.log("Число додатнє");
+  } else if (number < 0) {
+    console.log("Число від'ємне");
+  } else if (number === 0) {
+    console.log("Число дорівнює нулю");
+  }
+}
+
+verifyTypeOfNumber();
