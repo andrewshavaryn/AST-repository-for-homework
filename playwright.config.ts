@@ -87,6 +87,11 @@ export default defineConfig({
       testDir: "tests/unit-tests-with-functions",
     },
 
+    {
+      name: "coffee-cart-with-functions",
+      testDir: "tests/coffee-cart-with-functions",
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
