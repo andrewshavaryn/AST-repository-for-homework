@@ -8,12 +8,14 @@ Task 1
 - "Число непарне."
 */
 
-const number = 4;
-
-if (isNaN(number) || typeof number !== "number") {
-  console.log("Будь ласка, введи коректне число!");
-} else if (number % 2 === 0) {
-  console.log("Число парне");
-} else {
-  console.log("Число непарне");
+function isEvenNumber(number: number) {
+  if (isNaN(number) || typeof number !== "number") {
+    console.log("Будь ласка, введи коректне число!");
+  } else if (number % 2 === 0) {
+    console.log("Число парне");
+  } else {
+    console.log("Число непарне");
+  }
 }
+
+isEvenNumber(4);
