@@ -8,10 +8,11 @@
 - "Числа рівні."
 */
 
-let a = 8
-let b = 10
+let a = 8;
+let b = 10;
 
-if (typeof a !== "number" || typeof b !== "number" || isNaN(a) || isNaN(b)) {
+function compareNumbers() {
+    if (typeof a !== "number" || typeof b !== "number" || isNaN(a) || isNaN(b)) {
 console.log ("Введіть числовий формат даних")
 } else if (a > b) {
     console.log("Перше число більше");
@@ -20,3 +21,6 @@ console.log ("Введіть числовий формат даних")
 } else if (a === b) {
     console.log("Числа рівні")
 }
+};
+
+compareNumbers();
