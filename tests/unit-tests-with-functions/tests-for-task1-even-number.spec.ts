@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
 
-import { isEvenNumber } from "./task-1-even-number";
+import { isEvenNumber } from "../../hw-with-loops-and-functions/task-1-even-number";
 
 test("task-1: парне число", async () => {
   const result = isEvenNumber(4);
