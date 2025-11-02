@@ -10,13 +10,13 @@ Task 4
 
 export function isAgeForElections(age: number) {
   if (isNaN(age) || typeof age !== "number") {
-    console.log("Invalid age, please enter age as a Number");
+    return "Invalid age, please enter age as a Number";
   } else if (age < 0) {
-    console.log("Invalid age: should be not less than 0");
+    return "Invalid age: should be not less than 0";
   } else if (age >= 18) {
-    console.log("Ви можете голосувати");
+    return "Ви можете голосувати";
   } else {
-    console.log("Ви ще не можете голосувати");
+    return "Ви ще не можете голосувати";
   }
 }
 
