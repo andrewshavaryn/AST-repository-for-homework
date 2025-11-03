@@ -3,64 +3,66 @@ import { test, expect, Page } from "@playwright/test";
 const baseURL = "https://coffee-cart.app";
 
 export function getAllLocators(page: Page) {
-  const espresso = page.locator('[data-test="Espresso"]');
-  const flatWhite = page.locator('[data-test="Flat_White"]');
-  const americano = page.locator('[data-test="Americano"]');
-  const promoMessage = page.getByText(
-    "It's your lucky day! Get an extra cup of Mocha for $4."
-  );
-  const promoAcceptButton = page.getByRole("button", {
-    name: "Yes, of course!",
-  });
-  const checkout = page.locator('[data-test="checkout"]');
-  const successMessage = page.getByRole("button", {
-    name: "Thanks for your purchase.",
-  });
-  const nameField = page.getByRole("textbox", { name: "Name" });
-  const emailField = page.getByRole("textbox", { name: "Emai" });
-  const promoCheckbox = page.getByRole("checkbox", {
-    name: "Promotion checkbox",
-  });
-  const submitButton = page.getByRole("button", { name: "Submit" });
-
-  return espresso
-}
-
-export async function clickOnEspresso(page: Page) {
-  await page.locator('[data-test="Espresso"]');
+  return {
+    espresso: page.locator('[data-test="Espresso"]'),
+    flatWhite: page.locator('[data-test="Flat_White"]'),
+    americano: page.locator('[data-test="Americano"]'),
+    cappuccino: page.locator('[data-test="Cappuccino"]'),
+    espressoMacchiato: page.locator('[data-test="Espresso_Macchiato"]'),
+    mocha: page.locator('[data-test="Mocha"]'),
+    cafeLatte: page.locator('[data-test="Cafe_Latte"]'),
+    espressoConPanna: page.locator('[data-test="Espresso_Con Panna"]'),
+    promoMessage: page.getByText(
+      "It's your lucky day! Get an extra cup of Mocha for $4."
+    ),
+    promoAcceptButton: page.getByRole("button", {
+      name: "Yes, of course!",
+    }),
+    skipButton: page.getByRole("button", { name: "Nah, I'll skip." }),
+    checkout: page.locator('[data-test="checkout"]'),
+    successMessage: page.getByRole("button", {
+      name: "Thanks for your purchase.",
+    }),
+    nameField: page.getByRole("textbox", { name: "Name" }),
+    emailField: page.getByRole("textbox", { name: "Emai" }),
+    promoCheckbox: page.getByRole("checkbox", {
+      name: "Promotion checkbox",
+    }),
+    submitButton: page.getByRole("button", { name: "Submit" }),
+    cart: page.getByRole("link", { name: "Cart page" }),
+    menu: page.getByRole("link", { name: "Menu page" }),
+    app: page.locator("#app"),
+    emptyCart: page.getByText("No coffee, go add some."),
+  };
 }
 
 test(
-  "VAR-0001 Order with 3 products and promotion product",
+  "Func-0001 Order with 3 products and promotion product",
   {
     tag: ["@regression"],
     annotation: {
       type: "description",
-      description: "Order with 3 products and promotion product",
+      description:
+        "Order with 3 products and promotion product and use functions",
     },
   },
 
   async ({ page }) => {
     await page.goto(baseURL);
-    const espresso = page.locator('[data-test="Espresso"]');
-    const flatWhite = page.locator('[data-test="Flat_White"]');
-    const americano = page.locator('[data-test="Americano"]');
-    const promoMessage = page.getByText(
-      "It's your lucky day! Get an extra cup of Mocha for $4."
-    );
-    const promoAcceptButton = page.getByRole("button", {
-      name: "Yes, of course!",
-    });
-    const checkout = page.locator('[data-test="checkout"]');
-    const successMessage = page.getByRole("button", {
-      name: "Thanks for your purchase.",
-    });
-    const nameField = page.getByRole("textbox", { name: "Name" });
-    const emailField = page.getByRole("textbox", { name: "Emai" });
-    const promoCheckbox = page.getByRole("checkbox", {
-      name: "Promotion checkbox",
-    });
-    const submitButton = page.getByRole("button", { name: "Submit" });
+
+    const {
+      espresso,
+      flatWhite,
+      americano,
+      promoMessage,
+      promoAcceptButton,
+      checkout,
+      successMessage,
+      nameField,
+      emailField,
+      promoCheckbox,
+      submitButton,
+    } = getAllLocators(page);
 
     await espresso.click();
     await flatWhite.click();
@@ -81,30 +83,32 @@ test(
 );
 
 test(
-  "VAR-0002 Check that SKIP button not add new promo product to the Cart",
+  "Func-0002 Check that SKIP button not add new promo product to the Cart",
 
   {
     tag: ["@smoke"],
     annotation: {
       type: "description",
       description:
-        "Check that SKIP button not add new promo product to the Cart",
+        "Check that SKIP button not add new promo product to the Cart (with functions)",
     },
   },
 
   async ({ page }) => {
+    await page.goto(baseURL);
+
+    const {
+      espressoMacchiato,
+      espresso,
+      cappuccino,
+      promoMessage,
+      app,
+      skipButton,
+    } = getAllLocators(page);
+
     const cartContent =
       "Cappuccino x 1+-Espresso x 1+-Espresso Macchiato x 1+-";
-    const espressoMacchiato = page.locator('[data-test="Espresso_Macchiato"]');
-    const espresso = page.locator('[data-test="Espresso"]');
-    const cappuccino = page.locator('[data-test="Cappuccino"]');
-    const promoMessage = page.getByText(
-      "It's your lucky day! Get an extra cup of Mocha for $4."
-    );
-    const app = page.locator("#app");
-    const skipButton = page.getByRole("button", { name: "Nah, I'll skip." });
 
-    await page.goto(baseURL);
     await espresso.click();
     await espressoMacchiato.click();
     await cappuccino.click();
@@ -128,23 +132,22 @@ test(
 
   async ({ page }) => {
     await page.goto(baseURL);
-    const espressoMacchiato = page.locator('[data-test="Espresso_Macchiato"]');
-    const espresso = page.locator('[data-test="Espresso"]');
-    const cappuccino = page.locator('[data-test="Cappuccino"]');
-    const promoMessage = page.getByText(
-      "It's your lucky day! Get an extra cup of Mocha for $4."
-    );
-    const yesPromoButton = page.getByRole("button", {
-      name: "Yes, of course!",
-    });
-    const cart = page.getByRole("link", { name: "Cart page" });
     const promoItem = (quantity: number) =>
       `(Discounted) Mocha$4.00 x ${quantity}`;
-    const menu = page.getByRole("link", { name: "Menu page" });
-    const mocha = page.locator('[data-test="Mocha"]');
-    const flatWhite = page.locator('[data-test="Flat_White"]');
-    const cafeLatte = page.locator('[data-test="Cafe_Latte"]');
-    const espressoConPanna = page.locator('[data-test="Espresso_Con Panna"]');
+
+    const {
+      espressoMacchiato,
+      espresso,
+      cappuccino,
+      promoMessage,
+      promoAcceptButton,
+      cart,
+      menu,
+      mocha,
+      flatWhite,
+      cafeLatte,
+      espressoConPanna,
+    } = getAllLocators(page);
 
     await espresso.click();
     await espressoMacchiato.click();
@@ -152,7 +155,7 @@ test(
 
     await expect(promoMessage).toBeVisible();
 
-    await yesPromoButton.click();
+    await promoAcceptButton.click();
     await cart.click();
 
     await expect(page.getByText(promoItem(1))).toBeVisible();
@@ -163,7 +166,7 @@ test(
 
     await expect(promoMessage).toBeVisible();
 
-    await yesPromoButton.click();
+    await promoAcceptButton.click();
     await cart.click();
 
     await expect(page.getByText(promoItem(2))).toBeVisible();
@@ -174,7 +177,7 @@ test(
 
     await expect(promoMessage).toBeVisible();
 
-    await yesPromoButton.click();
+    await promoAcceptButton.click();
 
     await page.getByRole("listitem").filter({ hasText: "cart (10)" }).click();
     await expect(page.getByText(promoItem(3))).toBeVisible();
