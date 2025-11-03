@@ -88,8 +88,8 @@ export default defineConfig({
     },
 
     {
-      name: "coffee-cart-with-functions",
-      testDir: "tests/coffee-cart-with-functions",
+      name: "tests-with-functions",
+      testDir: "tests/tests-with-functions",
     },
 
     /* Test against mobile viewports. */
