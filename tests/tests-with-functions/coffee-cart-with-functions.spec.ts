@@ -2,6 +2,9 @@ import { test, expect, Page } from "@playwright/test";
 
 const baseURL = "https://coffee-cart.app";
 
+//TODO: зробити функцію, щоб вона не просто повертала локатори, а щоб і виконувались певні дії
+//написати функцію, яка може клікнути на будь-яку каву
+
 function getAllLocators(page: Page) {
   return {
     espresso: page.locator('[data-test="Espresso"]'),
