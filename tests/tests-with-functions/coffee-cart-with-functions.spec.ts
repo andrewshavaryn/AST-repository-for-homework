@@ -2,7 +2,7 @@ import { test, expect, Page } from "@playwright/test";
 
 const baseURL = "https://coffee-cart.app";
 
-export function getAllLocators(page: Page) {
+function getAllLocators(page: Page) {
   return {
     espresso: page.locator('[data-test="Espresso"]'),
     flatWhite: page.locator('[data-test="Flat_White"]'),
@@ -37,7 +37,7 @@ export function getAllLocators(page: Page) {
 }
 
 test(
-  "Func-0001 Order with 3 products and promotion product",
+  "FUNC-0001 Order with 3 products and promotion product",
   {
     tag: ["@regression"],
     annotation: {
@@ -83,7 +83,7 @@ test(
 );
 
 test(
-  "Func-0002 Check that SKIP button not add new promo product to the Cart",
+  "FUNC-0002 Check that SKIP button not add new promo product to the Cart",
 
   {
     tag: ["@smoke"],
@@ -121,12 +121,12 @@ test(
 );
 
 test(
-  "VAR-0003 Each subsequent discounted product (after first one) is added after adding 2 more products to the cart.",
+  "FUNC-0003 Each subsequent discounted product (after first one) is added after adding 2 more products to the cart.",
   {
     tag: ["@regression"],
     annotation: {
       type: "description",
-      description: "Discount logic",
+      description: "Discount logic (test with function)",
     },
   },
 
@@ -185,21 +185,20 @@ test(
 );
 
 test(
-  "VAR-0004 User can delete all products from the Cart and Cart is displayed as empty",
+  "FUNC-0004 User can delete all products from the Cart and Cart is displayed as empty",
   {
     tag: ["@smoke"],
     annotation: {
       type: "description",
-      description: "Delete functionality",
+      description: "Delete functionality (test with function)",
     },
   },
 
   async ({ page }) => {
     await page.goto(baseURL);
-    const flatWhite = page.locator('[data-test="Flat_White"]');
-    const americano = page.locator('[data-test="Americano"]');
-    const cart = page.getByRole("link", { name: "Cart page" });
-    const emptyCart = page.getByText("No coffee, go add some.");
+
+    const { flatWhite, americano, cart, emptyCart } = getAllLocators(page);
+
     const removeAmericano = page.getByRole("button", {
       name: "Remove all Americano",
     });
@@ -234,18 +233,24 @@ test(
 );
 
 test(
-  "VAR-0005 User can increase and reduce quantity of products in the Cart",
+  "FUNC-0005 User can increase and reduce quantity of products in the Cart",
   {
     tag: ["@smoke"],
     annotation: {
       type: "description",
-      description: "Cart functionality",
+      description: "Cart functionality (test with function)",
     },
   },
   async ({ page }) => {
-    const espressoMacchiato = page.locator('[data-test="Espresso_Macchiato"]');
-    const flatWhite = page.locator('[data-test="Flat_White"]');
-    const cart = page.getByRole("link", { name: "Cart page" });
+    await page.goto(baseURL);
+
+    const { espressoMacchiato, flatWhite, cart } = getAllLocators(page);
+
+    const espressoMacchiatoQuantity = (quantity: number) =>
+      page.getByText(`Espresso Macchiato$12.00 x ${quantity}`);
+    const flatWhiteQuantity = (quantity: number) =>
+      page.getByText(`Flat White$18.00 x ${quantity}`);
+
     const addOneEspressoMacchiato = page.getByRole("button", {
       name: "Add one Espresso Macchiato",
     });
@@ -258,15 +263,11 @@ test(
     const removeOneFlatWhite = page.getByRole("button", {
       name: "Remove one Flat White",
     });
-    const espressoMacchiatoQuantity = (quantity: number) =>
-      page.getByText(`Espresso Macchiato$12.00 x ${quantity}`);
-    const flatWhiteQuantity = (quantity: number) =>
-      page.getByText(`Flat White$18.00 x ${quantity}`);
+
     const cartItems = page
       .locator("div")
       .filter({ hasText: "Espresso Macchiato x 1+-Flat" })
       .nth(1);
-    await page.goto(baseURL);
 
     await espressoMacchiato.click();
     await flatWhite.click();
