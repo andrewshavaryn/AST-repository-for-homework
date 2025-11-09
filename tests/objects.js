@@ -14,11 +14,15 @@ const arr = ["Borys"];
 console.log(arr[0]);
 console.log(obj.name);
 
+//перебір значень для масивів;
+
 for (const ind of arr) {
 }
 
+//перебір значень для об'єктів
 for (const ind in obj) {
 }
+
 
 const student = {
   fullName: "Safonov Pavlo",
@@ -43,6 +47,8 @@ for (const key in student) {
   console.log(student.getMyDiploma());
   student.study();
 }
+
+
 
 // forEach, find, filter, include
 
