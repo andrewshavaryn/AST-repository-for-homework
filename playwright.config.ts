@@ -98,9 +98,9 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://demoqa.com",
-        actionTimeout: 120000, // 2 хвилини
+        actionTimeout: 60000, // 1 хв
       },
-      timeout: 240000, // 4 хвилини на весь тест
+      timeout: 120000, // 2 хвилини на весь тест
     },
 
     /* Test against mobile viewports. */
