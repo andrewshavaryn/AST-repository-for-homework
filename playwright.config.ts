@@ -98,9 +98,11 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://demoqa.com",
-        actionTimeout: 60000, // 1 хв
+        headless: false, // 👀 Побачиш що блокує
+        launchOptions: {
+          slowMo: 1000, // Повільно
+        },
       },
-      timeout: 120000, // 2 хвилини на весь тест
     },
 
     /* Test against mobile viewports. */

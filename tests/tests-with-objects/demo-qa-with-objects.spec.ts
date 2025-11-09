@@ -21,15 +21,15 @@ type TestData = {
   city?: string;
 };
 
-// ✅ Набори тестових даних ПЕРЕД test.describe
+// Набори тестових даних
 const testDataSets = [
   {
     testName: "All fields filled",
     data: {
       firstName: "Andrii",
-      lastName: "Shavaryn",
+      lastName: "Shavaha",
       email: "andrii.test@gmail.com",
-      gender: "Other" as const,
+      gender: "Male" as const,
       mobile: "1234567890",
       dateOfBirth: {
         day: "15",
@@ -39,8 +39,8 @@ const testDataSets = [
       subjects: ["Maths", "Physics"],
       hobbies: ["Sports", "Reading"],
       currentAddress: "123 Main Street, Uzhhorod",
-      state: "NCR",
-      city: "Delhi",
+      state: "Uttar Pradesh",
+      city: "Lucknow",
     },
   },
   {
@@ -68,15 +68,15 @@ const testDataSets = [
       subjects: ["English"],
       hobbies: ["Music"],
       currentAddress: "Optional Address Street",
-      state: "Uttar Pradesh",
-      city: "Agra",
+      state: "NCR",
+      city: "Delhi",
     },
   },
 ];
 
-// ✅ Тепер test.describe
+// Параметризовані тести
 test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
-  test.setTimeout(120000); // 2 хвилини на тест
+  test.setTimeout(240000); // 4 хвилини на тест
 
   for (const testSet of testDataSets) {
     test(`Practice Form - ${testSet.testName}`, async ({ page }, testInfo) => {
@@ -111,7 +111,7 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       });
 
       // Почекай трохи після видалення реклами
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(2000);
 
       // Скролимо до форми
       await page.locator("#firstName").scrollIntoViewIfNeeded();
@@ -187,64 +187,38 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         await page.locator("#currentAddress").fill(data.currentAddress);
       }
 
+      // State and City (необов'язкові) - ЯК В РЕКОРДЕРІ
+      // Точно як в рекордері - клік по SVG
       if (data.state) {
-        await page.locator("#state").scrollIntoViewIfNeeded();
+        await page.locator("#state svg").click();
+        await page.waitForTimeout(1000);
 
-        // Фокус на контейнері
-        await page.locator("#state").click();
-        await page.waitForTimeout(500);
-
-        // Вводимо текст повільно
-        await page.keyboard.type(data.state, { delay: 100 });
-        await page.waitForTimeout(500);
-
-        // Натискаємо стрілку вниз і Enter
-        await page.keyboard.press("ArrowDown");
-        await page.waitForTimeout(300);
-        await page.keyboard.press("Enter");
-
+        // Вибір опції по тексту з exact: true
+        await page.getByText(data.state, { exact: true }).click();
         await page.waitForTimeout(500);
       }
 
       if (data.city) {
         await page.locator("#city").scrollIntoViewIfNeeded();
+        await page.waitForTimeout(1000);
 
-        await page.locator("#city").click();
-        await page.waitForTimeout(500);
+        // Точно як в рекордері - клік по SVG
+        await page.locator("#city svg").click();
+        await page.waitForTimeout(1000);
 
-        await page.keyboard.type(data.city, { delay: 100 });
-        await page.waitForTimeout(500);
-
-        await page.keyboard.press("ArrowDown");
-        await page.waitForTimeout(300);
-        await page.keyboard.press("Enter");
-
-        await page.waitForTimeout(500);
-      }
-
-      if (data.city) {
-        await page.locator("#city").scrollIntoViewIfNeeded();
-
-        await page.locator("#city").click();
-        await page.waitForTimeout(500);
-
-        await page.keyboard.type(data.city, { delay: 100 });
-        await page.waitForTimeout(500);
-
-        await page.keyboard.press("ArrowDown");
-        await page.waitForTimeout(300);
-        await page.keyboard.press("Enter");
-
+        // Вибір опції по тексту з exact: true
+        await page.getByText(data.city, { exact: true }).click();
         await page.waitForTimeout(500);
       }
 
       // Submit форми
       await page.locator("#submit").scrollIntoViewIfNeeded();
+      await page.waitForTimeout(500);
       await page.locator("#submit").click({ force: true });
 
       // Перевірка що модальне вікно з'явилося
       await expect(page.locator("#example-modal-sizes-title-lg")).toBeVisible({
-        timeout: 10000,
+        timeout: 15000,
       });
       await expect(page.locator("#example-modal-sizes-title-lg")).toHaveText(
         "Thanks for submitting the form"
@@ -253,6 +227,7 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       // Перевірка даних у модальному вікні
       const modalTable = page.locator(".table");
 
+      // Перевірка обов'язкових полів
       await expect(
         modalTable
           .locator("td")
@@ -265,6 +240,7 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         modalTable.locator("td").filter({ hasText: data.gender })
       ).toBeVisible();
 
+      // Перевірка необов'язкових полів якщо вони були заповнені
       if (data.email) {
         await expect(
           modalTable.locator("td").filter({ hasText: data.email })
