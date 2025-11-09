@@ -104,3 +104,44 @@ console.log(coffee);
 
 // value + index
 cat
+
+
+
+//відеолекція з ютуба про об'єкти
+
+const obj1 = {
+  name: "Andrew",
+  age: 18
+};
+
+
+const obj2 = obj1;
+
+obj1.age = 30;
+obj2.name = "John";
+
+console.log(obj1);
+console.log(obj2);
+
+
+
+const arr1 = [1, 2, 3];
+const arr2 = [1, 2, 3];
+
+
+console.log(arr1 === arr2);
+
+
+const groupA = [
+  "Chelsea London", 
+  "Real Madrid", 
+  "Bayern Munich",
+  "FC Milan"
+];
+
+function createTeamsForCalendarPage(teams) {
+  return teams.map((item) => item.split(" ")[0]);
+}
+
+console.log(createTeamsForCalendarPage(groupA));
+console.log(groupA);
