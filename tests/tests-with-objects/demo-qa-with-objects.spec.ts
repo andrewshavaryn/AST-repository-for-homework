@@ -1,6 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
 
-const baseURL = "https://demoqa.com";
 
 test(
   "DEMOQATest-0001 User can submit the form with valid data",
