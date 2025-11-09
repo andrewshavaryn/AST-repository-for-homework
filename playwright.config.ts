@@ -95,10 +95,6 @@ export default defineConfig({
     {
       name: "tests-with-objects",
       testDir: "tests/tests-with-objects",
-      use: {
-        ...devices["Desktop Chrome"],
-        baseURL: "https://demoqa.com",
-      },
     },
 
     /* Test against mobile viewports. */
