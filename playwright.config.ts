@@ -92,6 +92,15 @@ export default defineConfig({
       testDir: "tests/tests-with-functions",
     },
 
+    {
+      name: "tests-with-objects",
+      testDir: "tests/tests-with-objects",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://demoqa.com/automation-practice-form",
+      },
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
