@@ -97,7 +97,7 @@ export default defineConfig({
       testDir: "tests/tests-with-objects",
       use: {
         ...devices["Desktop Chrome"],
-        baseURL: "https://demoqa.com/automation-practice-form",
+        baseURL: "https://demoqa.com",
       },
     },
 
