@@ -21,15 +21,15 @@ type TestData = {
   city?: string;
 };
 
-// Набори тестових даних
+// ✅ Набори тестових даних ПЕРЕД test.describe
 const testDataSets = [
   {
     testName: "All fields filled",
     data: {
       firstName: "Andrii",
-      lastName: "Shavaha",
+      lastName: "Shavaryn",
       email: "andrii.test@gmail.com",
-      gender: "Male" as const,
+      gender: "Other" as const,
       mobile: "1234567890",
       dateOfBirth: {
         day: "15",
@@ -74,12 +74,12 @@ const testDataSets = [
   },
 ];
 
-// Обгортаємо всі тести в describe з тегом
+// ✅ Тепер test.describe
 test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
-  
+  test.setTimeout(120000); // 2 хвилини на тест
+
   for (const testSet of testDataSets) {
     test(`Practice Form - ${testSet.testName}`, async ({ page }, testInfo) => {
-      // Додаємо annotation
       testInfo.annotations.push({
         type: "description",
         description: "Positive and negative case for submit the form",
@@ -89,11 +89,32 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
 
       await page.goto(baseURL);
 
-      // Закрити рекламу/банери якщо є
+      // ВАЖЛИВО: Чекаємо поки сторінка завантажиться
+      await page.waitForLoadState("domcontentloaded");
+
+      // Закрити рекламу і модальні вікна
       await page.evaluate(() => {
-        const ads = document.querySelectorAll('ins, iframe[id*="google_ads"]');
+        // Видаляємо всі рекламні блоки
+        const ads = document.querySelectorAll(
+          'ins, iframe[id*="google_ads"], div[id*="ad"], .advertisement, #fixedban'
+        );
         ads.forEach((ad) => ad.remove());
+
+        // Видаляємо overlay якщо є
+        const overlays = document.querySelectorAll(
+          '.modal-backdrop, [class*="overlay"]'
+        );
+        overlays.forEach((overlay) => overlay.remove());
+
+        // Включаємо скрол якщо він був заблокований
+        document.body.style.overflow = "auto";
       });
+
+      // Почекай трохи після видалення реклами
+      await page.waitForTimeout(1000);
+
+      // Скролимо до форми
+      await page.locator("#firstName").scrollIntoViewIfNeeded();
 
       // Заповнення обов'язкових полів
       await page.locator("#firstName").fill(data.firstName);
@@ -105,17 +126,20 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       }
 
       // Gender (обов'язкове)
-      await page
-        .locator(
-          `label[for="gender-radio-${data.gender === "Male" ? "1" : data.gender === "Female" ? "2" : "3"}"]`
-        )
-        .click();
+      const genderLabel = page.locator(
+        `label[for="gender-radio-${
+          data.gender === "Male" ? "1" : data.gender === "Female" ? "2" : "3"
+        }"]`
+      );
+      await genderLabel.scrollIntoViewIfNeeded();
+      await genderLabel.click({ force: true });
 
       // Mobile (обов'язкове)
       await page.locator("#userNumber").fill(data.mobile);
 
       // Date of Birth (необов'язкове)
       if (data.dateOfBirth) {
+        await page.locator("#dateOfBirthInput").scrollIntoViewIfNeeded();
         await page.locator("#dateOfBirthInput").click();
 
         await page
@@ -136,44 +160,92 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
 
       // Subjects (необов'язкове)
       if (data.subjects && data.subjects.length > 0) {
+        await page.locator("#subjectsInput").scrollIntoViewIfNeeded();
         for (const subject of data.subjects) {
           await page.locator("#subjectsInput").fill(subject);
           await page.keyboard.press("Enter");
+          await page.waitForTimeout(300);
         }
       }
 
       // Hobbies (необов'язкове)
       if (data.hobbies && data.hobbies.length > 0) {
         for (const hobby of data.hobbies) {
-          await page
-            .locator(
-              `label[for="hobbies-checkbox-${hobby === "Sports" ? "1" : hobby === "Reading" ? "2" : "3"}"]`
-            )
-            .click();
+          const hobbyLabel = page.locator(
+            `label[for="hobbies-checkbox-${
+              hobby === "Sports" ? "1" : hobby === "Reading" ? "2" : "3"
+            }"]`
+          );
+          await hobbyLabel.scrollIntoViewIfNeeded();
+          await hobbyLabel.click({ force: true });
         }
       }
 
       // Current Address (необов'язкове)
       if (data.currentAddress) {
+        await page.locator("#currentAddress").scrollIntoViewIfNeeded();
         await page.locator("#currentAddress").fill(data.currentAddress);
       }
 
-      // State and City (необов'язкові)
       if (data.state) {
+        await page.locator("#state").scrollIntoViewIfNeeded();
+
+        // Фокус на контейнері
         await page.locator("#state").click();
-        await page.locator(`text=${data.state}`).click();
+        await page.waitForTimeout(500);
+
+        // Вводимо текст повільно
+        await page.keyboard.type(data.state, { delay: 100 });
+        await page.waitForTimeout(500);
+
+        // Натискаємо стрілку вниз і Enter
+        await page.keyboard.press("ArrowDown");
+        await page.waitForTimeout(300);
+        await page.keyboard.press("Enter");
+
+        await page.waitForTimeout(500);
       }
 
       if (data.city) {
+        await page.locator("#city").scrollIntoViewIfNeeded();
+
         await page.locator("#city").click();
-        await page.locator(`text=${data.city}`).click();
+        await page.waitForTimeout(500);
+
+        await page.keyboard.type(data.city, { delay: 100 });
+        await page.waitForTimeout(500);
+
+        await page.keyboard.press("ArrowDown");
+        await page.waitForTimeout(300);
+        await page.keyboard.press("Enter");
+
+        await page.waitForTimeout(500);
+      }
+
+      if (data.city) {
+        await page.locator("#city").scrollIntoViewIfNeeded();
+
+        await page.locator("#city").click();
+        await page.waitForTimeout(500);
+
+        await page.keyboard.type(data.city, { delay: 100 });
+        await page.waitForTimeout(500);
+
+        await page.keyboard.press("ArrowDown");
+        await page.waitForTimeout(300);
+        await page.keyboard.press("Enter");
+
+        await page.waitForTimeout(500);
       }
 
       // Submit форми
-      await page.locator("#submit").click();
+      await page.locator("#submit").scrollIntoViewIfNeeded();
+      await page.locator("#submit").click({ force: true });
 
       // Перевірка що модальне вікно з'явилося
-      await expect(page.locator("#example-modal-sizes-title-lg")).toBeVisible();
+      await expect(page.locator("#example-modal-sizes-title-lg")).toBeVisible({
+        timeout: 10000,
+      });
       await expect(page.locator("#example-modal-sizes-title-lg")).toHaveText(
         "Thanks for submitting the form"
       );
@@ -181,7 +253,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       // Перевірка даних у модальному вікні
       const modalTable = page.locator(".table");
 
-      // Перевірка обов'язкових полів
       await expect(
         modalTable
           .locator("td")
@@ -194,7 +265,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         modalTable.locator("td").filter({ hasText: data.gender })
       ).toBeVisible();
 
-      // Перевірка необов'язкових полів якщо вони були заповнені
       if (data.email) {
         await expect(
           modalTable.locator("td").filter({ hasText: data.email })

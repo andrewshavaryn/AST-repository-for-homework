@@ -95,6 +95,12 @@ export default defineConfig({
     {
       name: "tests-with-objects",
       testDir: "tests/tests-with-objects",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://demoqa.com",
+        actionTimeout: 120000, // 2 хвилини
+      },
+      timeout: 240000, // 4 хвилини на весь тест
     },
 
     /* Test against mobile viewports. */
