@@ -4,11 +4,11 @@ const baseURL = "https://demoqa.com/automation-practice-form";
 
 // Типи для тестових даних
 type TestData = {
-  firstName: string;
-  lastName: string;
+  firstName?: string; // ✅ Тепер теж optional!
+  lastName?: string; // ✅ Тепер теж optional!
   email?: string;
-  gender: "Male" | "Female" | "Other";
-  mobile: string;
+  gender?: "Male" | "Female" | "Other"; // ✅ Тепер теж optional!
+  mobile?: string; // ✅ Тепер теж optional!
   dateOfBirth?: {
     day: string;
     month: string;
@@ -25,9 +25,10 @@ type TestData = {
 const testDataSets = [
   {
     testName: "All fields filled",
+    isNegative: false, // ✅ Позитивний тест
     data: {
       firstName: "Andrii",
-      lastName: "Shavaryn",
+      lastName: "Shavaha",
       email: "andrii.test@gmail.com",
       gender: "Male" as const,
       mobile: "1234567890",
@@ -45,6 +46,7 @@ const testDataSets = [
   },
   {
     testName: "Only required fields",
+    isNegative: false, // ✅ Позитивний тест
     data: {
       firstName: "Pavlo",
       lastName: "Safonov",
@@ -53,13 +55,17 @@ const testDataSets = [
     },
   },
   {
-    testName: "Only optional fields with required minimum",
+    testName: "Only optional fields - negative test",
+    isNegative: true, // ❌ Негативний тест
     data: {
-      firstName: "Test",
-      lastName: "User",
+      // Обов'язкові поля ВІДСУТНІ!
+      // firstName: пусто
+      // lastName: пусто
+      // gender: не вибрано
+      // mobile: пусто
+
+      // Тільки необов'язкові поля
       email: "optional@test.com",
-      gender: "Female" as const,
-      mobile: "5555555555",
       dateOfBirth: {
         day: "20",
         month: "June",
@@ -82,60 +88,71 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
     test(`Practice Form - ${testSet.testName}`, async ({ page }, testInfo) => {
       testInfo.annotations.push({
         type: "description",
-        description: "Positive and negative case for submit the form",
+        description: testSet.isNegative
+          ? "Negative case - form should not submit without required fields"
+          : "Positive case - form submits successfully",
       });
 
       const data = testSet.data;
 
       await page.goto(baseURL);
 
-      // ВАЖЛИВО: Чекаємо поки сторінка завантажиться
+      // Чекаємо поки сторінка завантажиться
       await page.waitForLoadState("domcontentloaded");
 
       // Закрити рекламу і модальні вікна
       await page.evaluate(() => {
-        // Видаляємо всі рекламні блоки
         const ads = document.querySelectorAll(
           'ins, iframe[id*="google_ads"], div[id*="ad"], .advertisement, #fixedban'
         );
         ads.forEach((ad) => ad.remove());
 
-        // Видаляємо overlay якщо є
         const overlays = document.querySelectorAll(
           '.modal-backdrop, [class*="overlay"]'
         );
         overlays.forEach((overlay) => overlay.remove());
 
-        // Включаємо скрол якщо він був заблокований
         document.body.style.overflow = "auto";
       });
 
-      // Почекай трохи після видалення реклами
       await page.waitForTimeout(2000);
 
-      // Скролимо до форми
+      // Заповнення полів (тільки ті що є в data)
       await page.locator("#firstName").scrollIntoViewIfNeeded();
 
-      // Заповнення обов'язкових полів
-      await page.locator("#firstName").fill(data.firstName);
-      await page.locator("#lastName").fill(data.lastName);
+      // First Name (обов'язкове, якщо є)
+      if (data.firstName) {
+        await page.locator("#firstName").fill(data.firstName);
+      }
+
+      // Last Name (обов'язкове, якщо є)
+      if (data.lastName) {
+        await page.locator("#lastName").fill(data.lastName);
+      }
 
       // Email (необов'язкове)
       if (data.email) {
         await page.locator("#userEmail").fill(data.email);
       }
 
-      // Gender (обов'язкове)
-      const genderLabel = page.locator(
-        `label[for="gender-radio-${
-          data.gender === "Male" ? "1" : data.gender === "Female" ? "2" : "3"
-        }"]`
-      );
-      await genderLabel.scrollIntoViewIfNeeded();
-      await genderLabel.click({ force: true });
+      // Gender (обов'язкове, якщо є)
+      if (data.gender) {
+        // Зберігаємо значення в змінну
+        const gender = data.gender;
 
-      // Mobile (обов'язкове)
-      await page.locator("#userNumber").fill(data.mobile);
+        const genderLabel = page.locator(
+          `label[for="gender-radio-${
+            gender === "Male" ? "1" : gender === "Female" ? "2" : "3"
+          }"]`
+        );
+        await genderLabel.scrollIntoViewIfNeeded();
+        await genderLabel.click({ force: true });
+      }
+
+      // Mobile (обов'язкове, якщо є)
+      if (data.mobile) {
+        await page.locator("#userNumber").fill(data.mobile);
+      }
 
       // Date of Birth (необов'язкове)
       if (data.dateOfBirth) {
@@ -189,22 +206,17 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
 
       // State and City (необов'язкові)
       if (data.state) {
+        await page.locator("#state").scrollIntoViewIfNeeded();
         await page.locator("#state svg").click();
         await page.waitForTimeout(1000);
-
-        // Вибір опції по тексту з exact: true
         await page.getByText(data.state, { exact: true }).click();
         await page.waitForTimeout(500);
       }
 
       if (data.city) {
         await page.locator("#city").scrollIntoViewIfNeeded();
-        await page.waitForTimeout(1000);
-
         await page.locator("#city svg").click();
         await page.waitForTimeout(1000);
-
-        // Вибір опції по тексту з exact: true
         await page.getByText(data.city, { exact: true }).click();
         await page.waitForTimeout(500);
       }
@@ -214,45 +226,97 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       await page.waitForTimeout(500);
       await page.locator("#submit").click({ force: true });
 
-      // Перевірка що модальне вікно з'явилося
-      await expect(page.locator("#example-modal-sizes-title-lg")).toBeVisible({
-        timeout: 15000,
-      });
-      await expect(page.locator("#example-modal-sizes-title-lg")).toHaveText(
-        "Thanks for submitting the form"
-      );
+      // ✅ РОЗГАЛУЖЕННЯ: Позитивний vs Негативний тест
+      if (testSet.isNegative) {
+        // ❌ НЕГАТИВНИЙ ТЕСТ - форма НЕ має сабмітитись
 
-      // Перевірка даних у модальному вікні
-      const modalTable = page.locator(".table");
+        console.log("Running negative test assertions...");
 
-      // Перевірка обов'язкових полів
-      await expect(
-        modalTable
-          .locator("td")
-          .filter({ hasText: `${data.firstName} ${data.lastName}` })
-      ).toBeVisible();
-      await expect(
-        modalTable.locator("td").filter({ hasText: data.mobile })
-      ).toBeVisible();
-      await expect(
-        modalTable.locator("td").filter({ hasText: data.gender })
-      ).toBeVisible();
-
-      // Перевірка необов'язкових полів якщо вони були заповнені
-      if (data.email) {
+        // Перевіряємо що модальне вікно НЕ з'явилось
         await expect(
-          modalTable.locator("td").filter({ hasText: data.email })
-        ).toBeVisible();
-      }
+          page.locator("#example-modal-sizes-title-lg")
+        ).not.toBeVisible({
+          timeout: 3000,
+        });
 
-      if (data.currentAddress) {
+        // Перевіряємо валідацію обов'язкових полів
+        // DemoQA підсвічує обов'язкові поля червоною рамкою
+
+        // First Name - обов'язкове
+        await expect(page.locator("#firstName")).toHaveCSS(
+          "border-color",
+          "rgb(220, 53, 69)" // Червона рамка
+        );
+
+        // Last Name - обов'язкове
+        await expect(page.locator("#lastName")).toHaveCSS(
+          "border-color",
+          "rgb(220, 53, 69)"
+        );
+
+        // Gender - обов'язкове (перевіряємо що жодна кнопка не вибрана)
+        await expect(page.locator("#gender-radio-1")).not.toBeChecked();
+        await expect(page.locator("#gender-radio-2")).not.toBeChecked();
+        await expect(page.locator("#gender-radio-3")).not.toBeChecked();
+
+        // Mobile - обов'язкове
+        await expect(page.locator("#userNumber")).toHaveCSS(
+          "border-color",
+          "rgb(220, 53, 69)"
+        );
+
+        console.log(
+          "✅ Negative test passed - all required fields show validation errors"
+        );
+      } else {
+        // ✅ ПОЗИТИВНИЙ ТЕСТ - форма має сабмітитись успішно
+
+        console.log("Running positive test assertions...");
+
+        // Перевірка що модальне вікно з'явилося
+        await expect(page.locator("#example-modal-sizes-title-lg")).toBeVisible(
+          {
+            timeout: 15000,
+          }
+        );
+        await expect(page.locator("#example-modal-sizes-title-lg")).toHaveText(
+          "Thanks for submitting the form"
+        );
+
+        // Перевірка даних у модальному вікні
+        const modalTable = page.locator(".table");
+
+        // Перевірка обов'язкових полів
         await expect(
-          modalTable.locator("td").filter({ hasText: data.currentAddress })
+          modalTable
+            .locator("td")
+            .filter({ hasText: `${data.firstName} ${data.lastName}` })
         ).toBeVisible();
-      }
+        await expect(
+          modalTable.locator("td").filter({ hasText: data.mobile })
+        ).toBeVisible();
+        await expect(
+          modalTable.locator("td").filter({ hasText: data.gender })
+        ).toBeVisible();
 
-      // Закрити модальне вікно
-      await page.locator("#closeLargeModal").click();
+        // Перевірка необов'язкових полів якщо вони були заповнені
+        if (data.email) {
+          await expect(
+            modalTable.locator("td").filter({ hasText: data.email })
+          ).toBeVisible();
+        }
+
+        if (data.currentAddress) {
+          await expect(
+            modalTable.locator("td").filter({ hasText: data.currentAddress })
+          ).toBeVisible();
+        }
+
+        // Закрити модальне вікно
+        await page.locator("#closeLargeModal").click();
+
+        console.log("✅ Positive test passed - form submitted successfully");
+      }
     });
   }
 });
