@@ -27,7 +27,7 @@ const testDataSets = [
     testName: "All fields filled",
     data: {
       firstName: "Andrii",
-      lastName: "Shavaha",
+      lastName: "Shavaryn",
       email: "andrii.test@gmail.com",
       gender: "Male" as const,
       mobile: "1234567890",
@@ -187,8 +187,7 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         await page.locator("#currentAddress").fill(data.currentAddress);
       }
 
-      // State and City (необов'язкові) - ЯК В РЕКОРДЕРІ
-      // Точно як в рекордері - клік по SVG
+      // State and City (необов'язкові)
       if (data.state) {
         await page.locator("#state svg").click();
         await page.waitForTimeout(1000);
@@ -202,7 +201,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         await page.locator("#city").scrollIntoViewIfNeeded();
         await page.waitForTimeout(1000);
 
-        // Точно як в рекордері - клік по SVG
         await page.locator("#city svg").click();
         await page.waitForTimeout(1000);
 
