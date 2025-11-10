@@ -2,7 +2,6 @@ import { test, expect, Page } from "@playwright/test";
 
 const baseURL = "https://demoqa.com/automation-practice-form";
 
-// Типи для тестових даних
 type TestData = {
   firstName?: string;
   lastName?: string;
@@ -22,11 +21,10 @@ type TestData = {
   city?: string;
 };
 
-// Набори тестових даних
 const testDataSets = [
   {
     testName: "All fields filled",
-    isNegative: false, // ✅ Positive test
+    isNegative: false, // Positive test
     data: {
       firstName: "Andrii",
       lastName: "Shavaryn",
@@ -48,7 +46,7 @@ const testDataSets = [
   },
   {
     testName: "Only required fields",
-    isNegative: false, // ✅ Positive test
+    isNegative: false, // Positive test
     data: {
       firstName: "Pavlo",
       lastName: "Safonov",
@@ -111,28 +109,21 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       });
 
       await page.waitForTimeout(2000);
-
-      // Заповнення полів (тільки ті що є в data)
       await page.locator("#firstName").scrollIntoViewIfNeeded();
 
-      // First Name (обов'язкове, якщо є)
       if (data.firstName) {
         await page.locator("#firstName").fill(data.firstName);
       }
 
-      // Last Name (обов'язкове, якщо є)
       if (data.lastName) {
         await page.locator("#lastName").fill(data.lastName);
       }
 
-      // Email (необов'язкове)
       if (data.email) {
         await page.locator("#userEmail").fill(data.email);
       }
 
-      // Gender (обов'язкове, якщо є)
       if (data.gender) {
-        // Зберігаємо значення в змінну
         const gender = data.gender;
 
         const genderLabel = page.locator(
@@ -144,12 +135,10 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         await genderLabel.click({ force: true });
       }
 
-      // Mobile (обов'язкове, якщо є)
       if (data.mobile) {
         await page.locator("#userNumber").fill(data.mobile);
       }
 
-      // Date of Birth (необов'язкове)
       if (data.dateOfBirth) {
         await page.locator("#dateOfBirthInput").scrollIntoViewIfNeeded();
         await page.locator("#dateOfBirthInput").click();
@@ -170,7 +159,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
           .click();
       }
 
-      // Subjects (необов'язкове)
       if (data.subjects && data.subjects.length > 0) {
         await page.locator("#subjectsInput").scrollIntoViewIfNeeded();
         for (const subject of data.subjects) {
@@ -180,7 +168,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         }
       }
 
-      // Hobbies (необов'язкове)
       if (data.hobbies && data.hobbies.length > 0) {
         for (const hobby of data.hobbies) {
           const hobbyLabel = page.locator(
@@ -193,25 +180,21 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         }
       }
 
-      // Picture (необов'язкове)
       if (data.picture) {
         await page.locator("#uploadPicture").scrollIntoViewIfNeeded();
-        // Створюємо мінімальний JPEG файл програмно
         await page.locator("#uploadPicture").setInputFiles({
           name: "test-image.jpg",
           mimeType: "image/jpeg",
-          buffer: Buffer.from([0xff, 0xd8, 0xff, 0xe0]), // Мінімальний JPEG header
+          buffer: Buffer.from([0xff, 0xd8, 0xff, 0xe0]),
         });
         await page.waitForTimeout(500);
       }
 
-      // Current Address (необов'язкове)
       if (data.currentAddress) {
         await page.locator("#currentAddress").scrollIntoViewIfNeeded();
         await page.locator("#currentAddress").fill(data.currentAddress);
       }
 
-      // State and City (необов'язкові)
       if (data.state) {
         await page.locator("#state").scrollIntoViewIfNeeded();
         await page.locator("#state svg").click();
@@ -228,45 +211,33 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
         await page.waitForTimeout(500);
       }
 
-      // Submit форми
       await page.locator("#submit").scrollIntoViewIfNeeded();
       await page.waitForTimeout(500);
       await page.locator("#submit").click({ force: true });
 
-      // ✅ РОЗГАЛУЖЕННЯ: Позитивний vs Негативний тест
       if (testSet.isNegative) {
-        // ❌ НЕГАТИВНИЙ ТЕСТ - форма НЕ має сабмітитись
-
         console.log("Running negative test assertions...");
 
-        // Перевіряємо що модальне вікно НЕ з'явилось
         await expect(
           page.locator("#example-modal-sizes-title-lg")
         ).not.toBeVisible({
           timeout: 3000,
         });
 
-        // Перевіряємо валідацію обов'язкових полів
-        // DemoQA підсвічує обов'язкові поля червоною рамкою
-
-        // First Name - обов'язкове
         await expect(page.locator("#firstName")).toHaveCSS(
           "border-color",
           "rgb(220, 53, 69)" // Червона рамка
         );
 
-        // Last Name - обов'язкове
         await expect(page.locator("#lastName")).toHaveCSS(
           "border-color",
           "rgb(220, 53, 69)"
         );
 
-        // Gender - обов'язкове (перевіряємо що жодна кнопка не вибрана)
         await expect(page.locator("#gender-radio-1")).not.toBeChecked();
         await expect(page.locator("#gender-radio-2")).not.toBeChecked();
         await expect(page.locator("#gender-radio-3")).not.toBeChecked();
 
-        // Mobile - обов'язкове
         await expect(page.locator("#userNumber")).toHaveCSS(
           "border-color",
           "rgb(220, 53, 69)"
@@ -276,11 +247,8 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
           "✅ Negative test passed - all required fields show validation errors"
         );
       } else {
-        // ✅ ПОЗИТИВНИЙ ТЕСТ - форма має сабмітитись успішно
-
         console.log("Running positive test assertions...");
 
-        // Перевірка що модальне вікно з'явилося
         await expect(page.locator("#example-modal-sizes-title-lg")).toBeVisible(
           {
             timeout: 15000,
@@ -290,10 +258,8 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
           "Thanks for submitting the form"
         );
 
-        // Перевірка даних у модальному вікні
         const modalTable = page.locator(".table");
 
-        // Перевірка обов'язкових полів
         await expect(
           modalTable
             .locator("td")
@@ -306,7 +272,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
           modalTable.locator("td").filter({ hasText: data.gender })
         ).toBeVisible();
 
-        // Перевірка необов'язкових полів якщо вони були заповнені
         if (data.email) {
           await expect(
             modalTable.locator("td").filter({ hasText: data.email })
@@ -319,9 +284,7 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
           ).toBeVisible();
         }
 
-        // Закрити модальне вікно
         await page.locator("#closeLargeModal").click();
-
         console.log("✅ Positive test passed - form submitted successfully");
       }
     });
