@@ -23,18 +23,20 @@ Fizz
 */
 
 
-export function isNumberCanDivideOnThreeOrFive (number: number) {
+export function isNumberCanDivideOnThreeOrFive(number: number) {
   if (isNaN(number) || typeof number !== "number") {
     console.log("Будь ласка, введи коректне число!");
+  } else if (number === 0) { 
+    console.log(0);
   } else if (number % 3 === 0 && number % 5 === 0) {
     console.log("FizzBuzz");
   } else if (number % 5 === 0) {
     console.log("Buzz");
   } else if (number % 3 === 0) {
-    console.log("Fizz")
+    console.log("Fizz");
   } else {
-    console.log(number)
+    console.log(number);
   }
-};
+}
 
-isNumberCanDivideOnThreeOrFive(15);
+isNumberCanDivideOnThreeOrFive(30);
