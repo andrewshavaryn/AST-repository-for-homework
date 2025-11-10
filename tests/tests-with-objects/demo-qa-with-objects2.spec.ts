@@ -75,8 +75,14 @@ const testDataSets = [
 ];
 
 test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
-  test.setTimeout(240000); // 4 хвилини на тест
 
+  // Закрити рекламу і модальні вікна
+  test.beforeEach(async ({ page }) => {
+    await page.route(new RegExp("ad"), (route) => {
+      route.abort(); // Block the request
+    });
+  });
+  
   for (const testSet of testDataSets) {
     test(`Practice Form - ${testSet.testName}`, async ({ page }, testInfo) => {
       testInfo.annotations.push({
@@ -89,27 +95,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       const data = testSet.data;
 
       await page.goto(baseURL);
-
-      // Чекаємо поки сторінка завантажиться
-      await page.waitForLoadState("domcontentloaded");
-
-      // Закрити рекламу і модальні вікна
-      await page.evaluate(() => {
-        const ads = document.querySelectorAll(
-          'ins, iframe[id*="google_ads"], div[id*="ad"], .advertisement, #fixedban'
-        );
-        ads.forEach((ad) => ad.remove());
-
-        const overlays = document.querySelectorAll(
-          '.modal-backdrop, [class*="overlay"]'
-        );
-        overlays.forEach((overlay) => overlay.remove());
-
-        document.body.style.overflow = "auto";
-      });
-
-      await page.waitForTimeout(2000);
-      await page.locator("#firstName").scrollIntoViewIfNeeded();
 
       if (data.firstName) {
         await page.locator("#firstName").fill(data.firstName);
@@ -131,7 +116,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
             gender === "Male" ? "1" : gender === "Female" ? "2" : "3"
           }"]`
         );
-        await genderLabel.scrollIntoViewIfNeeded();
         await genderLabel.click({ force: true });
       }
 
@@ -140,7 +124,6 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       }
 
       if (data.dateOfBirth) {
-        await page.locator("#dateOfBirthInput").scrollIntoViewIfNeeded();
         await page.locator("#dateOfBirthInput").click();
 
         await page
@@ -160,11 +143,8 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
       }
 
       if (data.subjects && data.subjects.length > 0) {
-        await page.locator("#subjectsInput").scrollIntoViewIfNeeded();
         for (const subject of data.subjects) {
           await page.locator("#subjectsInput").fill(subject);
-          await page.keyboard.press("Enter");
-          await page.waitForTimeout(300);
         }
       }
 
@@ -175,44 +155,32 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
               hobby === "Sports" ? "1" : hobby === "Reading" ? "2" : "3"
             }"]`
           );
-          await hobbyLabel.scrollIntoViewIfNeeded();
           await hobbyLabel.click({ force: true });
         }
       }
 
       if (data.picture) {
-        await page.locator("#uploadPicture").scrollIntoViewIfNeeded();
         await page.locator("#uploadPicture").setInputFiles({
           name: "test-image.jpg",
           mimeType: "image/jpeg",
           buffer: Buffer.from([0xff, 0xd8, 0xff, 0xe0]),
         });
-        await page.waitForTimeout(500);
       }
 
       if (data.currentAddress) {
-        await page.locator("#currentAddress").scrollIntoViewIfNeeded();
         await page.locator("#currentAddress").fill(data.currentAddress);
       }
 
       if (data.state) {
-        await page.locator("#state").scrollIntoViewIfNeeded();
         await page.locator("#state svg").click();
-        await page.waitForTimeout(1000);
         await page.getByText(data.state, { exact: true }).click();
-        await page.waitForTimeout(500);
       }
 
       if (data.city) {
-        await page.locator("#city").scrollIntoViewIfNeeded();
         await page.locator("#city svg").click();
-        await page.waitForTimeout(1000);
         await page.getByText(data.city, { exact: true }).click();
-        await page.waitForTimeout(500);
       }
 
-      await page.locator("#submit").scrollIntoViewIfNeeded();
-      await page.waitForTimeout(500);
       await page.locator("#submit").click({ force: true });
 
       if (testSet.isNegative) {
@@ -226,7 +194,7 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
 
         await expect(page.locator("#firstName")).toHaveCSS(
           "border-color",
-          "rgb(220, 53, 69)" // Червона рамка
+          "rgb(220, 53, 69)"
         );
 
         await expect(page.locator("#lastName")).toHaveCSS(
