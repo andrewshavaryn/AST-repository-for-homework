@@ -4,11 +4,11 @@ const baseURL = "https://demoqa.com/automation-practice-form";
 
 // Типи для тестових даних
 type TestData = {
-  firstName?: string; // ✅ Тепер теж optional!
-  lastName?: string; // ✅ Тепер теж optional!
+  firstName?: string;
+  lastName?: string;
   email?: string;
-  gender?: "Male" | "Female" | "Other"; // ✅ Тепер теж optional!
-  mobile?: string; // ✅ Тепер теж optional!
+  gender?: "Male" | "Female" | "Other";
+  mobile?: string;
   dateOfBirth?: {
     day: string;
     month: string;
@@ -25,10 +25,10 @@ type TestData = {
 const testDataSets = [
   {
     testName: "All fields filled",
-    isNegative: false, // ✅ Позитивний тест
+    isNegative: false, // ✅ Positive test
     data: {
       firstName: "Andrii",
-      lastName: "Shavaha",
+      lastName: "Shavaryn",
       email: "andrii.test@gmail.com",
       gender: "Male" as const,
       mobile: "1234567890",
@@ -46,7 +46,7 @@ const testDataSets = [
   },
   {
     testName: "Only required fields",
-    isNegative: false, // ✅ Позитивний тест
+    isNegative: false, // ✅ Positive test
     data: {
       firstName: "Pavlo",
       lastName: "Safonov",
@@ -56,15 +56,9 @@ const testDataSets = [
   },
   {
     testName: "Only optional fields - negative test",
-    isNegative: true, // ❌ Негативний тест
+    isNegative: true, // ❌ Negative test
     data: {
-      // Обов'язкові поля ВІДСУТНІ!
-      // firstName: пусто
-      // lastName: пусто
-      // gender: не вибрано
-      // mobile: пусто
-
-      // Тільки необов'язкові поля
+      // Only optional fields
       email: "optional@test.com",
       dateOfBirth: {
         day: "20",
