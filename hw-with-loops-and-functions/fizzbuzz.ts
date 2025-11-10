@@ -37,4 +37,4 @@ export function isNumberCanDivideOnThreeOrFive (number: number) {
   }
 };
 
-isNumberCanDivideOnThreeOrFive(30);
+isNumberCanDivideOnThreeOrFive(15);
