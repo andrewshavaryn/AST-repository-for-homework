@@ -16,6 +16,7 @@ type TestData = {
   };
   subjects?: string[];
   hobbies?: string[];
+  picture?: string;
   currentAddress?: string;
   state?: string;
   city?: string;
@@ -39,6 +40,7 @@ const testDataSets = [
       },
       subjects: ["Maths", "Physics"],
       hobbies: ["Sports", "Reading"],
+      picture: "test-image.jpg",
       currentAddress: "123 Main Street, Uzhhorod",
       state: "Uttar Pradesh",
       city: "Lucknow",
@@ -56,9 +58,8 @@ const testDataSets = [
   },
   {
     testName: "Only optional fields - negative test",
-    isNegative: true, // ❌ Negative test
+    isNegative: true, // Negative test
     data: {
-      // Only optional fields
       email: "optional@test.com",
       dateOfBirth: {
         day: "20",
@@ -67,14 +68,14 @@ const testDataSets = [
       },
       subjects: ["English"],
       hobbies: ["Music"],
-      currentAddress: "Optional Address Street",
-      state: "NCR",
-      city: "Delhi",
+      picture: "test-image.jpg",
+      currentAddress: "Optional address",
+      state: "Haryana",
+      city: "Karnal",
     },
   },
 ];
 
-// Параметризовані тести
 test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
   test.setTimeout(240000); // 4 хвилини на тест
 
@@ -190,6 +191,18 @@ test.describe("REGFORM-0001 Registration Form Tests", { tag: "@smoke" }, () => {
           await hobbyLabel.scrollIntoViewIfNeeded();
           await hobbyLabel.click({ force: true });
         }
+      }
+
+      // Picture (необов'язкове)
+      if (data.picture) {
+        await page.locator("#uploadPicture").scrollIntoViewIfNeeded();
+        // Створюємо мінімальний JPEG файл програмно
+        await page.locator("#uploadPicture").setInputFiles({
+          name: "test-image.jpg",
+          mimeType: "image/jpeg",
+          buffer: Buffer.from([0xff, 0xd8, 0xff, 0xe0]), // Мінімальний JPEG header
+        });
+        await page.waitForTimeout(500);
       }
 
       // Current Address (необов'язкове)
