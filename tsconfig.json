@@ -13,6 +13,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["tests/**/*", "playwright.config.ts", "hw-with-loops-and-functions/task-2-greetings-by-time.ts", "hw-with-loops-and-functions/tests-for-task1-even-number.spec.ts", "objects.js"],
+  "include": ["tests/**/*", "playwright.config.ts", "hw-with-loops-and-functions/task-2-greetings-by-time.ts", "hw-with-loops-and-functions/tests-for-task1-even-number.spec.ts", "objects.js", "hw-with-loops-and-functions/hw-with-methods-of-arrays-and-objects", "hw-with-methods-of-arrays-and-object/hw-experience-of-work.ts"],
   "exclude": ["node_modules"]
 }
