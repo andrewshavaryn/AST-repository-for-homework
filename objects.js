@@ -23,7 +23,6 @@ for (const ind of arr) {
 for (const ind in obj) {
 }
 
-
 const student = {
   fullName: "Safonov Pavlo",
   age: 21,
@@ -47,8 +46,6 @@ for (const key in student) {
   console.log(student.getMyDiploma());
   student.study();
 }
-
-
 
 // forEach, find, filter, include
 
@@ -109,17 +106,14 @@ console.log(coffee);
 console.log(coffee);
 
 // value + index
-cat
-
-
+cat;
 
 //відеолекція з ютуба про об'єкти
 
 const obj1 = {
   name: "Andrew",
-  age: 18
+  age: 18,
 };
-
 
 const obj2 = obj1;
 
@@ -129,21 +123,12 @@ obj2.name = "John";
 console.log(obj1);
 console.log(obj2);
 
-
-
 const arr1 = [1, 2, 3];
 const arr2 = [1, 2, 3];
 
-
 console.log(arr1 === arr2);
 
-
-const groupA = [
-  "Chelsea London", 
-  "Real Madrid", 
-  "Bayern Munich",
-  "FC Milan"
-];
+const groupA = ["Chelsea London", "Real Madrid", "Bayern Munich", "Milan"];
 
 function createTeamsForCalendarPage(teams) {
   return teams.map((item) => item.split(" ")[0]);
