@@ -101,6 +101,11 @@ export default defineConfig({
       },
     },
 
+    {
+      name: "OOP",
+      testDir: "tests/OOP",
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
