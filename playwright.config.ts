@@ -104,6 +104,10 @@ export default defineConfig({
     {
       name: "OOP",
       testDir: "tests/OOP",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://....",
+      },
     },
 
     /* Test against mobile viewports. */
