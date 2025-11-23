@@ -110,6 +110,15 @@ export default defineConfig({
       },
     },
 
+    {
+      name: "work-with-web-elements",
+      testDir: "tests/work-with-web-elements",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://....",
+      },
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
