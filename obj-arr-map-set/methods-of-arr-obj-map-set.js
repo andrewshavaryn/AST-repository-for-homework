@@ -95,6 +95,8 @@ for (const key in obj) {
 
 
 
+
+
 //methods of Map
 //adding to Map
 const map = new Map();
@@ -143,6 +145,8 @@ for (const key of map.keys()) {
 for (const value of map.values()) {
   console.log(value);
 }
+
+
 
 
 
