@@ -10,7 +10,7 @@ console.log(arr);
 
 //get from arrays
 console.log(arr[5]);
-console.log(arr.at(5));
+console.log(arr.at(0));
 
 //check existence for arrays
 console.log(arr.includes("this is 3rd index"));
@@ -103,7 +103,6 @@ map.set("chelsea", "best");
 map.set(1, 22);
 
 console.log(map);
-console.log(map.size);
 
 //get from Map
 console.log(map.get("chelsea"));
@@ -149,8 +148,8 @@ for (const value of map.values()) {
 
 
 
-//methods of Set (add додає тільки одне значення за раз, тому для кожного елемента викликаємо окремо)
-//adding to Set
+//methods of Set 
+//adding to Set (add додає тільки одне значення за раз, тому для кожного елемента викликаємо окремо)
 const set = new Set();
 set.add("1");
 set.add(true);
@@ -158,6 +157,7 @@ set.add(null);
 set.add(undefined);
 
 console.log(set);
+console.log(set.size);
 
 //get from Set
 console.log(set.keys());
