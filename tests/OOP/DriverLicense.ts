@@ -1,16 +1,23 @@
+/*В TS є такі модифікатори доступу:
+- public (незахищений, будь хто може модифікувати, йде по дефолту, доступ звідусіль);
+- private (захищена властивість, доступ є тільки всередині класу);
+- protected (доступний лише всередині самого класу або в саб-класах);
+- readonly (захищає будь-які властивості від зміни, читання звідусіль, зміна тільки в конструкторі);
+*/
+
 class DriverLicense {
   //властивості ():
-  birthDate: string;
-  category: string;
-  documentId: string;
-  firstName: string;
-  lastName: string;
-  middleName: string;
-  expirationDate: string;
-  lastUpdated: number;
-  authority: string;
-  categoryIssuingDate: string;
-  photo: string | Buffer;
+  readonly birthDate: string;
+  private category: string;
+  readonly documentId: string;
+  private firstName: string;
+  private lastName: string;
+  private middleName: string;
+  private expirationDate: string;
+  private lastUpdated: number;
+  readonly authority: string;
+  readonly categoryIssuingDate: string;
+  private photo: string | Buffer;
 
   //конструктор може бути:
   //-явний (створений власноручно);
@@ -37,6 +44,20 @@ class DriverLicense {
     this.authority = authority;
     this.categoryIssuingDate = categoryIssuingDate;
     this.photo = photo;
+  }
+
+  //ПРИНЦИП ІНКАПСУЛЯЦІЇ дозволяє змінювати властивості через спеціальні методи set та get
+
+  setlastName(lastName: string, authToken: string) {
+    if (authToken === "125125125") {
+      this.lastName = lastName;
+    } else {
+      throw Error('you are not authorize');
+    }
+  }
+
+  get getlastName() {
+    return this.lastName;
   }
 
   //методи(поведінка)
@@ -84,8 +105,20 @@ const driverLicense1 = new DriverLicense(
   "Finder://photo/img.png"
 );
 
-console.log(driverLicense.category); //викликаємо властивість об'єкту
+//console.log(driverLicense.firstName); //викликаємо властивість об'єкту
 console.log(driverLicense); //викликаємо об'єкт
 driverLicense.replaceDocument(); //викликаємо метод обʼєкту
 
 console.log(driverLicense1);
+
+//driverLicense1.authority = "test";
+
+console.log(driverLicense1.authority);
+
+//driverLicense.documentId = "test21";
+
+console.log(driverLicense);
+
+driverLicense.setlastName("Шевченко", "125125125");
+
+console.log(driverLicense.getlastName);
