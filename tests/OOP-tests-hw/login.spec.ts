@@ -1,4 +1,4 @@
-import test from "@playwright/test";
+import test, { expect } from "@playwright/test";
 import { LoginPage } from "../OOP-classes-hw/LoginPage";
 
 test(
@@ -8,8 +8,11 @@ test(
     const loginPage = new LoginPage(page);
 
     await page.goto("https://www.saucedemo.com/");
-    await loginPage.usernameInputLocator.fill("standard_user");
-    await loginPage.passwordInputLocator.fill("secret_sause");
-    await loginPage.usernameInputLocator.click;
+    await loginPage.fillUsername("standard_user");
+    await loginPage.fillPassword("secret_sause");
+    await loginPage.clickLogin();
+
+    //де робити перевірки ?
+    await expect(loginPage.usernameInputLocator).toBeVisible();
   }
 );

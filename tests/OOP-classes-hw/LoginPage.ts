@@ -1,23 +1,38 @@
 import { Locator, Page } from "@playwright/test";
+import { BasePage } from "./BasePage";
 
 //назва елементу (label, placeholder, name) + тип елементу (input, buttn, anchor, checkbox)
 
-export class LoginPage {
-  page: Page
-  usernameInputLocator: Locator;
-  passwordInputLocator: Locator;
-  loginButtonLocator: Locator;
+//реалізовуємо патерни FACADE, ADAPTER
+
+//IS A
+//HAS A
+export class LoginPage extends BasePage {
+  readonly usernameInputLocator: Locator = this.page.getByRole("textbox", {
+    name: "Username",
+  });
+
+  readonly passwordInputLocator: Locator = this.page.getByRole("textbox", {
+    name: "Password",
+  });
+
+  readonly loginButtonLocator: Locator = this.page.getByRole("button", {
+    name: "Login",
+  });
 
   constructor(page: Page) {
-    this.page = page;
-    this.usernameInputLocator = this.page.getByRole("textbox", {
-      name: "Username",
-    });
-    this.passwordInputLocator = this.page.getByRole("textbox", {
-      name: "Password",
-    });
-    this.loginButtonLocator = this.page.getByRole("button", {
-      name: "Login",
-    });
+    super(page);
+  }
+
+  async fillUsername(username: string): Promise<void> {
+    await this.usernameInputLocator.fill(username);
+  }
+
+  async fillPassword(password: string): Promise<void> {
+    await this.passwordInputLocator.fill(password);
+  }
+
+  async clickLogin(): Promise<void> {
+    await this.loginButtonLocator.click();
   }
 }
