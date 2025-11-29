@@ -102,8 +102,8 @@ export default defineConfig({
     },
 
     {
-      name: "OOP",
-      testDir: "tests/OOP",
+      name: "OOP-tests-hw",
+      testDir: "tests/OOP-tests-hw",
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://....",
