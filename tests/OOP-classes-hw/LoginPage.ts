@@ -1,13 +1,12 @@
-import { Locator, Page } from "@playwright/test";
-import { BasePage } from "./BasePage";
-import { BaseLocators } from './BaseLocators';
+import { BasePage } from "./Base/BasePage";
+import { LoginPageLocators } from "./LoginPageLocators";
 
 //назва елементу (label, placeholder, name) + тип елементу (input, buttn, anchor, checkbox)
 
-//реалізовуємо патерни FACADE, ADAPTER
+//реалізовуємо патерни FACADE + ADAPTER = PageObject
 
-//IS A
-//HAS A
+//IS A - успадкування
+//HAS A - композиція
 export class LoginPage extends BasePage {
 readonly locators: LoginPageLocators = new LoginPageLocators(this.page);
 
@@ -24,16 +23,4 @@ readonly locators: LoginPageLocators = new LoginPageLocators(this.page);
   }
 }
 
-class LoginPageLocators extends BaseLocators {
-readonly usernameInputLocator: Locator = this.page.getByRole("textbox", {
-    name: "Username",
-  });
 
-  readonly passwordInputLocator: Locator = this.page.getByRole("textbox", {
-    name: "Password",
-  });
-
-  readonly loginButtonLocator: Locator = this.page.getByRole("button", {
-    name: "Login",
-  });
-}
