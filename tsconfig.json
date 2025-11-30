@@ -23,6 +23,6 @@
     "hw-with-methods-of-arrays-and-object/hw-experience-of-work.ts",
     "OOP- theory-lectures",
     "OOP-classes-hw"
-  ],
+, "PageFactory.ts"  ],
   "exclude": ["node_modules"]
 }
