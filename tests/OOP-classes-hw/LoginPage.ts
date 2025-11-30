@@ -1,5 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 import { BasePage } from "./BasePage";
+import { BaseLocators } from './BaseLocators';
 
 //назва елементу (label, placeholder, name) + тип елементу (input, buttn, anchor, checkbox)
 
@@ -8,7 +9,23 @@ import { BasePage } from "./BasePage";
 //IS A
 //HAS A
 export class LoginPage extends BasePage {
-  readonly usernameInputLocator: Locator = this.page.getByRole("textbox", {
+readonly locators: LoginPageLocators = new LoginPageLocators(this.page);
+
+  async fillUsername(username: string): Promise<void> {
+    await this.locators.usernameInputLocator.fill(username);
+  }
+
+  async fillPassword(password: string): Promise<void> {
+    await this.locators.passwordInputLocator.fill(password);
+  }
+
+  async clickLogin(): Promise<void> {
+    await this.locators.loginButtonLocator.click();
+  }
+}
+
+class LoginPageLocators extends BaseLocators {
+readonly usernameInputLocator: Locator = this.page.getByRole("textbox", {
     name: "Username",
   });
 
@@ -19,20 +36,4 @@ export class LoginPage extends BasePage {
   readonly loginButtonLocator: Locator = this.page.getByRole("button", {
     name: "Login",
   });
-
-  constructor(page: Page) {
-    super(page);
-  }
-
-  async fillUsername(username: string): Promise<void> {
-    await this.usernameInputLocator.fill(username);
-  }
-
-  async fillPassword(password: string): Promise<void> {
-    await this.passwordInputLocator.fill(password);
-  }
-
-  async clickLogin(): Promise<void> {
-    await this.loginButtonLocator.click();
-  }
 }

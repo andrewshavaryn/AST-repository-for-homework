@@ -9,10 +9,10 @@ test(
 
     await page.goto("https://www.saucedemo.com/");
     await loginPage.fillUsername("standard_user");
-    await loginPage.fillPassword("secret_sause");
+    await loginPage.fillPassword("secret_sauce");
     await loginPage.clickLogin();
 
     //де робити перевірки ?
-    await expect(loginPage.usernameInputLocator).toBeVisible();
+    await expect(loginPage.locators.passwordInputLocator).toBeVisible();
   }
 );
