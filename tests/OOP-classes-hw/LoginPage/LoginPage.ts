@@ -1,4 +1,4 @@
-import { BasePage } from "./Base/BasePage";
+import { BasePage } from "../BaseClasses/BasePage";
 import { LoginPageLocators } from "./LoginPageLocators";
 
 //назва елементу (label, placeholder, name) + тип елементу (input, buttn, anchor, checkbox)
@@ -8,7 +8,9 @@ import { LoginPageLocators } from "./LoginPageLocators";
 //IS A - успадкування
 //HAS A - композиція
 export class LoginPage extends BasePage {
-readonly locators: LoginPageLocators = new LoginPageLocators(this.page);
+  readonly locators: LoginPageLocators = new LoginPageLocators(
+    this.page.locator('[data-test="login-container"]')
+  );
 
   async fillUsername(username: string): Promise<void> {
     await this.locators.usernameInputLocator.fill(username);
@@ -22,5 +24,3 @@ readonly locators: LoginPageLocators = new LoginPageLocators(this.page);
     await this.locators.loginButtonLocator.click();
   }
 }
-
-

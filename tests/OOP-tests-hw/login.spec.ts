@@ -1,5 +1,5 @@
 import test, { expect } from "@playwright/test";
-import { LoginPage } from "../OOP-classes-hw/LoginPage";
+import { LoginPage } from "../OOP-classes-hw/LoginPage/LoginPage";
 
 test(
   "Login as standard user - should be logged",
