@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
-import { LoginPage } from "../OOP-classes-hw/LoginPage/LoginPage";
-import { ProductsPage } from "../OOP-classes-hw/ProductPage/ProductsPage";
+import { LoginPage } from "../../OOP-classes-hw/LoginPage/LoginPage";
+import { ProductsPage } from "../../OOP-classes-hw/ProductPage/ProductsPage";
 
 test("add product to cart", { tag: ["@regression"] }, async ({ page }) => {
   const loginPage = new LoginPage(page);

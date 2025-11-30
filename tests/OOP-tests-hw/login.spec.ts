@@ -1,6 +1,6 @@
 import test, { expect } from "@playwright/test";
-import { LoginPage } from "../OOP-classes-hw/LoginPage/LoginPage";
-import { ProductsPage } from "../OOP-classes-hw/ProductPage/ProductsPage";
+import { LoginPage } from "../../OOP-classes-hw/LoginPage/LoginPage";
+import { ProductsPage } from "../../OOP-classes-hw/ProductPage/ProductsPage";
 
 test(
   "Login as standard user - should be logged",
