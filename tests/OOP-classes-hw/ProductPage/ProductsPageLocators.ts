@@ -1,3 +1,3 @@
 import { BaseLocators } from "../BaseClasses/BaseLocators";
 
-export class ProdyctsPageLocators extends BaseLocators {}
+export class ProductsPageLocators extends BaseLocators {}
