@@ -8,13 +8,12 @@ test(
   { tag: ["@regression"] },
   async ({ page }) => {
     const loginPage = new LoginPage(page);
+    const productsPage = new ProductsPage(page);
 
     await page.goto("https://www.saucedemo.com/");
     await loginPage.fillUsername("standard_user");
     await loginPage.fillPassword("secret_sauce");
     await loginPage.clickLogin();
-
-    const productsPage = new ProductsPage(page);
 
     //перевіряємо чи юзер залогінений наявністю бургер меню (бо він є тільки в авторизованого юзера)
     await expect(productsPage.locators.burgerMenuLocator).toBeVisible();

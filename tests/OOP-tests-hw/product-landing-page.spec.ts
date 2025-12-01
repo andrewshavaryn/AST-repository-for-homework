@@ -12,7 +12,7 @@ test.describe("Products Landing Page Tests", () => {
 
     await page.goto("https://www.saucedemo.com/");
     await loginPage.fillUsername("standard_user");
-    await loginPage.fillPassword("secret_sauce");
+    await loginPage.fillPassword("secret_sauce"); //зробити один метод
     await loginPage.clickLogin();
   });
 
@@ -24,7 +24,7 @@ test.describe("Products Landing Page Tests", () => {
 
       await productsPage.addToCartByTitle(productName);
 
-      expect(await productsPage.isProductInCart(productName)).toBe(true);
+      expect(await productsPage.isProductInCart(productName)).toBe(true); //переписати на expectToBeVisible замість isVisible
       expect(await productsPage.getCartItemCount()).toBe(1);
     }
   );
