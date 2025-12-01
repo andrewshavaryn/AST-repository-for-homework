@@ -2,7 +2,7 @@ import test, { expect } from "@playwright/test";
 import { LoginPage } from "../../OOP-classes-hw/LoginPage/LoginPage";
 import { ProductsPage } from "../../OOP-classes-hw/ProductPage/ProductsPage";
 
-test("add product to cart", { tag: ["@regression"] }, async ({ page }) => {
+test("PLP-0001 - Add product to cart", { tag: ["@regression"] }, async ({ page }) => {
   const loginPage = new LoginPage(page);
   const productPage = new ProductsPage(page);
 
