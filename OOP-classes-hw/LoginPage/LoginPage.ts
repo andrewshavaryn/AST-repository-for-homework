@@ -23,4 +23,8 @@ export class LoginPage extends BasePage {
   async clickLogin(): Promise<void> {
     await this.locators.loginButtonLocator.click();
   }
+
+  async isErrorMessageVisible(): Promise<boolean> {
+    return this.locators.errorMessageLocator.isVisible();
+  }
 }

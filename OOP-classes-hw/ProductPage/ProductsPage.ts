@@ -1,8 +1,16 @@
 import { ProductCardComponent } from "../TestComponents/ProductCardComponent";
 import { BasePage } from "../BaseClasses/BasePage";
 import { ProductsPageLocators } from "./ProductsPageLocators";
+import { Page } from "@playwright/test";
 
 export class ProductsPage extends BasePage {
+  locators: ProductsPageLocators;
+
+  constructor(page: Page) {
+    super(page);
+    this.locators = new ProductsPageLocators(page.locator("body"));
+  }
+
   private getBaseCardLocator = (productName: string) =>
     `//*[@data-test="inventory-item-name" and text() = '${productName}']/ancestor::div[@data-test="inventory-item"]`;
 
@@ -10,7 +18,6 @@ export class ProductsPage extends BasePage {
     const card = new ProductCardComponent(
       this.page.locator(this.getBaseCardLocator(productName))
     );
-
     return card;
   }
 }
