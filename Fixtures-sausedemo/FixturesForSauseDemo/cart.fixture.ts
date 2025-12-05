@@ -22,9 +22,8 @@ export const test = base.extend<CartFixtures>({
     const productsPage = new ProductsPage(page);
     
     for (let i = 0; i < itemsCount; i++) {
-      // Припускаю, що у тебе є метод для додавання товару за індексом
-      // Якщо метод називається інакше - підкажи
-      await productsPage.addProductToCartByIndex(i);
+   //цикл для додавання товарів в кошик від 0 до itemsCount (не включаючи)
+      await productsPage.addToCartByIndex(i);
     }
 
     await use(page);
