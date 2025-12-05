@@ -111,6 +111,15 @@ export default defineConfig({
     },
 
     {
+      name: "OOP-tests-with-fixtures",
+      testDir: "tests/OOP-tests-with-fixtures",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://....",
+      },
+    },
+
+    {
       name: "work-with-web-elements",
       testDir: "tests/work-with-web-elements",
       use: {
