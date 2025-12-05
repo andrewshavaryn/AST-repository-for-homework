@@ -1,6 +1,5 @@
 import { test, expect } from '../../Fixtures-sausedemo/FixturesForSauseDemo';
 import { LoginPage } from '../../Fixtures-sausedemo/LoginPage/LoginPage';
-import { ProductsPage } from '../../Fixtures-sausedemo/ProductPage/ProductsPage';
 
 test.describe('Всі 5 користувачів - логін та логаут', () => {
   
