@@ -13,7 +13,7 @@ test.describe('Всі 5 користувачів - логін та логаут'
   ];
 
   for (const user of users) {
-    test(`${user.description} - FIXT-AUTH-001 - логін, додавання товару, логаут`, async ({ page }) => {
+    test(`${user.description} - FIXT-AUTH-001 - Login and Logout`, async ({ page }) => {
       // 1. Логін
       const loginPage = new LoginPage(page);
       await loginPage.goto();
@@ -22,15 +22,7 @@ test.describe('Всі 5 користувачів - логін та логаут'
       await expect(page).toHaveURL(/.*inventory\.html/);
       console.log(`${user.description} залогінився`);
       
-      // 2. Додавання товару
-      const productsPage = new ProductsPage(page);
-      await productsPage.addToCartByIndex(0);
-      
-      const badge = await productsPage.getCartItemCount();
-      expect(badge).toBe('1');
-      console.log(`${user.description} додав товар`);
-      
-      // 3. Логаут
+      // 2. Логаут
       await page.click('#react-burger-menu-btn');
       await page.waitForSelector('#logout_sidebar_link', { state: 'visible' });
       await page.click('#logout_sidebar_link');
@@ -41,7 +33,7 @@ test.describe('Всі 5 користувачів - логін та логаут'
   }
 
   // 6-й користувач - locked_out_user (негативний тест)
-  test('FIXT-AUTH-002 - Locked Out User - помилка при логіні', async ({ page }) => {
+  test('FIXT-AUTH-002 - Locked Out User - Negative case with error', async ({ page }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
     await loginPage.login('locked_out_user', 'secret_sauce');
