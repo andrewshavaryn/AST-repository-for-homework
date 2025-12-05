@@ -1,78 +1,20 @@
-import test, { expect } from "@playwright/test";
-import { LoginPage } from "../../OOP-classes-hw/LoginPage/LoginPage";
-import { ProductsPage } from "../../OOP-classes-hw/ProductPage/ProductsPage";
+import { test, expect } from '../../Fixtures-sausedemo/FixturesForSauseDemo';
 
-test.describe("Products Landing Page Tests", () => {
-  let loginPage: LoginPage;
-  let productsPage: ProductsPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    productsPage = new ProductsPage(page);
-
-    await page.goto("https://www.saucedemo.com/");
-    await loginPage.fillUsername("standard_user");
-    await loginPage.fillPassword("secret_sauce"); //зробити один метод
-    await loginPage.clickLogin();
+  test('FIXT-PLP-001-перевірка заголовка сторінки після логіну', async ({ 
+    authenticatedPage,
+    productsPage 
+  }) => {
+    // Ми вже на inventory.html завдяки authenticatedPage
+    const title = await authenticatedPage.locator('.title').textContent();
+    expect(title).toBe('Products');
+    console.log('✅ Заголовок сторінки правильний');
   });
 
-  test(
-    "PLP-001 - Add product to cart",
-    { tag: ["@regression"] },
-    async ({ page }) => {
-      const productName = "Sauce Labs Backpack";
 
-      await productsPage.addToCartByTitle(productName);
-
-      expect(await productsPage.isProductInCart(productName)).toBe(true); //переписати на expectToBeVisible замість isVisible
-      expect(await productsPage.getCartItemCount()).toBe(1);
-    }
-  );
-
-  test(
-    "PLP-002 - Remove product from cart",
-    { tag: ["@regression"] },
-    async ({ page }) => {
-      const productName = "Sauce Labs Bike Light";
-
-      // Додаємо
-      await productsPage.addToCartByTitle(productName);
-      expect(await productsPage.getCartItemCount()).toBe(1);
-
-      // Видаляємо
-      await productsPage.removeFromCartByTitle(productName);
-      expect(await productsPage.getCartItemCount()).toBe(0);
-    }
-  );
-
-  test(
-    "PLP-003 - Get correct product price",
-    { tag: ["@regression"] },
-    async ({ page }) => {
-      const productName = "Sauce Labs Backpack";
-
-      const price = await productsPage.getPriceByTitle(productName);
-
-      expect(price).toBe("$29.99");
-    }
-  );
-
-  test(
-    "PLP-004 - Add multiple products to cart",
-    { tag: ["@regression"] },
-    async ({ page }) => {
-      const products = [
-        "Sauce Labs Backpack",
-        "Sauce Labs Bike Light",
-        "Sauce Labs Bolt T-Shirt",
-      ];
-
-      for (const product of products) {
-        await productsPage.addToCartByTitle(product);
-      }
-
-      const cartCount = await productsPage.getCartItemCount();
-      expect(cartCount).toBe(3);
-    }
-  );
-});
+  test('FIXT-PLP-002-Standard User - перегляд товарів', async ({ 
+    authenticatedPage 
+  }) => {
+    const items = await authenticatedPage.locator('.inventory_item').count();
+    expect(items).toBeGreaterThan(0);
+    console.log('✅ Standard User бачить товари');
+  });
