@@ -1,84 +1,73 @@
-import test, { expect } from "@playwright/test";
-import { LoginPage } from "../../OOP-classes-hw/LoginPage/LoginPage";
-import { ProductsPage } from "../../OOP-classes-hw/ProductPage/ProductsPage";
-import { CartPage } from "../../OOP-classes-hw/CartPage/CartPage";
+import { test, expect } from '../../Fixtures-sausedemo/FixturesForSauseDemo';
 
-test.describe("Cart Page Tests", () => {
-  let loginPage: LoginPage;
-  let productsPage: ProductsPage;
-  let cartPage: CartPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
-    productsPage = new ProductsPage(page);
-    cartPage = new CartPage(page);
-
-    await page.goto("https://www.saucedemo.com/");
-    await loginPage.fillUsername("standard_user");
-    await loginPage.fillPassword("secret_sauce");
-    await loginPage.clickLogin();
-
-    // Додаємо продукт до кошика
-    await productsPage.addToCartByTitle("Sauce Labs Backpack");
+test.describe('Cart Tests with Fixtures', () => {
+  
+  test('FIXT-CART-001- перевірка порожнього кошика', async ({ 
+    authenticatedPage,
+    cartPage 
+  }) => {
+    // Йдемо в кошик
+    await authenticatedPage.goto('https://www.saucedemo.com/cart.html');
     
-    // Переходимо до кошика
-    await productsPage.goToCart();
+    // Перевіряємо що кошик порожній
+    const items = await authenticatedPage.locator('.cart_item').count();
+    expect(items).toBe(0);
+    console.log('Кошик порожній');
   });
 
-  test("CART-001 - Remove product from cart by title", 
-    { tag: ["@regression"] }, 
-    async ({ page }) => {
-      const productName = "Sauce Labs Backpack";
+  test('FIXT-CART-002 - перехід до checkout з порожнім кошиком', async ({ 
+    authenticatedPage 
+  }) => {
+    await authenticatedPage.goto('https://www.saucedemo.com/cart.html');
+    
+    // Кнопка Checkout має бути доступна навіть з порожнім кошиком
+    const checkoutButton = authenticatedPage.locator('[data-test="checkout"]');
+    await expect(checkoutButton).toBeVisible();
+    
+    await checkoutButton.click();
+    await expect(authenticatedPage).toHaveURL(/.*checkout-step-one\.html/);
+    console.log('Перехід до checkout працює');
+  });
+});
 
-      expect(await cartPage.isProductInCart(productName)).toBe(true);
+test.describe('Cart з товарами - мануальне додавання', () => {
+  
+  test('FIXT-CART-003 - додавання товару та перевірка кошика', async ({ 
+    authenticatedPage,
+    productsPage 
+  }) => {
+    
+    // Додаємо 1 товар
+    await productsPage.addToCartByIndex(0);
+    
+    // Перевіряємо badge
+    const count = await productsPage.getCartItemCount();
+    expect(count).toBe(1);
+    console.log('Badge показує 1 товар');
 
-      await cartPage.removeFromCartByTitle(productName);
+    await authenticatedPage.goto('https://www.saucedemo.com/cart.html');
+    
+    const items = await authenticatedPage.locator('.cart_item').count();
+    expect(items).toBe(1);
+    console.log('У кошику 1 товар');
+  });
 
-      expect(await cartPage.isCartEmpty()).toBe(true);
-    }
-  );
-
-  test("CART-002 - Checkout navigation", 
-    { tag: ["@regression"] }, 
-    async ({ page }) => {
-      await cartPage.checkout();
-
-      await expect(page).toHaveURL(/.*checkout-step-one/);
-    }
-  );
-
-  test("CART-003 - Continue shopping navigation", 
-    { tag: ["@regression"] }, 
-    async ({ page }) => {
-      await cartPage.continueShopping();
-
-      await expect(page).toHaveURL(/.*inventory/);
-      
-      expect(await productsPage.getCartItemCount()).toBe(1);
-    }
-  );
-
-  test("CART-004 - Remove multiple products from cart",
-    { tag: ["@regression"] }, 
-    async ({ page }) => {
-      await cartPage.continueShopping();
-      await productsPage.addToCartByTitle("Sauce Labs Bike Light");
-      await productsPage.addToCartByTitle("Sauce Labs Bolt T-Shirt");
-      
-      await productsPage.goToCart();
-
-      // Перевіряємо що 3 продукти в кошику
-      expect(await cartPage.getCartItemsCount()).toBe(3);
-
-      // Видаляємо по одному
-      await cartPage.removeFromCartByTitle("Sauce Labs Backpack");
-      expect(await cartPage.getCartItemsCount()).toBe(2);
-
-      await cartPage.removeFromCartByTitle("Sauce Labs Bike Light");
-      expect(await cartPage.getCartItemsCount()).toBe(1);
-
-      await cartPage.removeFromCartByTitle("Sauce Labs Bolt T-Shirt");
-      expect(await cartPage.isCartEmpty()).toBe(true);
-    }
-  );
+  test('FIXT-AUTH-004-видалення товару з кошика', async ({ 
+    authenticatedPage,
+    productsPage 
+  }) => {
+    // Додаємо товар
+    await productsPage.addToCartByIndex(0);
+    
+    // Йдемо в кошик
+    await authenticatedPage.goto('https://www.saucedemo.com/cart.html');
+    
+    // Видаляємо товар
+    await authenticatedPage.click('[data-test^="remove"]');
+    
+    // Перевіряємо
+    const items = await authenticatedPage.locator('.cart_item').count();
+    expect(items).toBe(0);
+    console.log('Товар видалено з кошика');
+  });
 });
