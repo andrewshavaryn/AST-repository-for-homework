@@ -34,7 +34,7 @@ export default defineConfig({
     video: "retain-on-failure",
     screenshot: "only-on-failure",
     baseURL: "https://demo.learnwebdriverio.com/",
-    storageState: "storageState.json",
+    //storageState: "storageState.json",
     actionTimeout: 30 * 1000,
   },
 
