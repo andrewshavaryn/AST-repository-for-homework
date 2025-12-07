@@ -5,17 +5,37 @@ test("zara, accept cookies", async ({ page, context }) => {
   await page.getByRole("button", { name: "Accept All Cookies" }).click();
   await page.getByRole("button", { name: "Yes, continue on Spain" }).click();
 
-// CRUD - Create Read Update Delete 
+  // CRUD - Create Read Update Delete
 
-//Create
-await page.context().addCookies([{
-    name: "test", 
-    value: "125151",
-    domain: "zara.com"
-}])
+  //Create
+  await page.context().addCookies([
+    {
+      name: "test",
+      value: "125151",
+      domain: ".zara.com",
+      path: "/",
+    },
+  ]);
 
-  //Get cookies - 2 способи роботи з кукі в тестах: виклик з пейджі і за допомогою фікстур
-  const contextFromPage = await page.context().cookies();
+  //Get cookies
   const contextFromFix = await context.cookies();
-});
 
+  //Update
+  const newCookies = contextFromFix.map((cookies) => {
+    if (cookies.name === "test") {
+      cookies.value = "changed";
+    }
+
+    return cookies;
+  });
+
+  await page.context().clearCookies();
+  await page.context().addCookies(newCookies);
+
+  //Clear cookies
+  const contextFromPage = await page.context().cookies();
+
+  expect(
+    contextFromFix.filter((cookies) => cookies.name === "test")
+  ).toBeTruthy();
+});
