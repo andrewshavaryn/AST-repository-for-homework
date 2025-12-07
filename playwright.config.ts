@@ -128,6 +128,15 @@ export default defineConfig({
       },
     },
 
+    {
+      name: "zara",
+      testDir: "tests/zara",
+      use: {
+        ...devices["Desktop Chrome"],
+        baseURL: "https://www.zara.com/es/en/",
+      },
+    },
+
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
