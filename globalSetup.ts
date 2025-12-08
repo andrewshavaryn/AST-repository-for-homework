@@ -17,15 +17,15 @@ async function globalSetup(config: FullConfig) {
       timeout: 30000,
     });
 
-    console.log("⏳ Waiting for page to load...");
+    console.log("Waiting for page to load...");
     await page.waitForTimeout(2000);
 
     await page.screenshot({ path: "debug-1-before-fill.png" });
 
-    console.log("📧 Filling email...");
+    console.log("Filling email...");
     await page.fill('input[placeholder="Email"]', "kante@gmail.com");
 
-    console.log("🔑 Filling password...");
+    console.log("Filling password...");
     await page.fill('input[placeholder="Password"]', "test1234");
 
     await page.screenshot({ path: "debug-2-after-fill.png" });
@@ -46,12 +46,12 @@ async function globalSetup(config: FullConfig) {
 
     await page.screenshot({ path: "debug-3-after-click.png" });
 
-    console.log("⏳ Waiting for redirect...");
+    console.log("Waiting for redirect...");
     await page.waitForURL("https://demo.learnwebdriverio.com/", {
       timeout: 15000,
     });
 
-    console.log("✅ Login successful!");
+    console.log("Login successful!");
 
     await context.storageState({ path: "storageState.json" });
     console.log("Storage state saved");
