@@ -1,32 +1,30 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Tests with Storage State", () => {
-  
-  test("StorageState-0001- Can access protected page without login", async ({ page }) => {
-    // Переходимо на сторінку створення статті (потребує авторизації)
-    await page.goto("/editor");
+test("StorageState-0001- Can create new article", async ({ page }) => {
+  await page.goto("/editor");
 
-    // Перевіряємо що ми на сторінці editor (не редиректнуло на login)
-    await expect(page).toHaveURL(/.*editor.*/);
-    
-    console.log("Can access protected pages!");
-  });
+  // Заповнюємо форму
+  await page.fill(
+    'input[placeholder="Article Title"]',
+    "Test Article via Storage State"
+  );
+  await page.fill(
+    'input[placeholder="What\'s this article about?"]',
+    "Testing automation"
+  );
+  await page.fill(
+    'textarea[placeholder="Write your article (in markdown)"]',
+    "This is a test article"
+  );
+  await page.fill('input[placeholder="Enter tags"]', "test");
 
-  test("StorageState-0002- Can create new article", async ({ page }) => {
-    await page.goto("/editor");
+  // Публікуємо (доступно тільки залогіненому)
+  await page.click('button:has-text("Publish Article")');
 
-    // Заповнюємо форму
-    await page.fill('input[placeholder="Article Title"]', "Test Article via Storage State");
-    await page.fill('input[placeholder="What\'s this article about?"]', "Testing automation");
-    await page.fill('textarea[placeholder="Write your article (in markdown)"]', "This is a test article");
-    await page.fill('input[placeholder="Enter tags"]', "test");
+  // Перевіряємо що стаття створена
+  await expect(page.locator("h1")).toContainText(
+    "Test Article via Storage State"
+  );
 
-    // Публікуємо
-    await page.click('button:has-text("Publish Article")');
-
-    // Перевіряємо що стаття створена
-    await expect(page.locator('h1')).toContainText("Test Article via Storage State");
-    
-    console.log("Article created successfully!");
-  });
+  console.log("Article created successfully!");
 });
