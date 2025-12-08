@@ -3,81 +3,57 @@ import { chromium, FullConfig } from "@playwright/test";
 async function globalSetup(config: FullConfig) {
   console.log("🚀 Starting global setup...");
 
-  const browser = await chromium.launch({
-    headless: false,
-    slowMo: 1000, // Уповільнюємо на 1 секунду між діями
+  const browser = await chromium.launch({ 
+    headless: false,  // Відкритий браузер щоб бачити що відбувається
   });
-
   const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
-    console.log("📝 Navigating to login page...");
-    await page.goto("https://demo.learnwebdriverio.com/login", {
-      waitUntil: "domcontentloaded",
-      timeout: 30000,
+    console.log("📝 Going to login page...");
+    await page.goto("https://demo.learnwebdriverio.com/login");
+
+    console.log("📧 Filling email...");
+    await page.getByPlaceholder("Email").fill("kante@gmail.com");
+    
+    console.log("🔑 Filling password...");
+    await page.getByPlaceholder("Password").fill("test1234");
+    
+    console.log("⏎ Pressing Enter...");
+    await page.getByPlaceholder("Password").press("Enter");
+
+    console.log("⏳ Waiting for redirect...");
+    await page.waitForURL("https://demo.learnwebdriverio.com/", { 
+      timeout: 15000 
     });
 
-    console.log("⏳ Waiting for page to be ready...");
-    await page.waitForLoadState("networkidle", { timeout: 10000 });
-
-    // Додаткова пауза
-    await page.waitForTimeout(2000);
-
-    console.log("🔍 Looking for email field...");
-    const emailField = page.getByPlaceholder("Email");
-    await emailField.waitFor({ state: "visible", timeout: 10000 });
-
-    console.log("📧 Typing email...");
-    await emailField.click(); // Клікаємо перед заповненням
-    await emailField.fill("kante@gmail.com");
-
-    // Перевіряємо що заповнилось
-    const emailValue = await emailField.inputValue();
-    console.log("Email value:", emailValue);
-
-    console.log("🔍 Looking for password field...");
-    const passwordField = page.getByPlaceholder("Password");
-    await passwordField.waitFor({ state: "visible", timeout: 10000 });
-
-    console.log("🔑 Typing password...");
-    await passwordField.click();
-    await passwordField.fill("test1234");
-
-    // Перевіряємо що заповнилось
-    const passwordValue = await passwordField.inputValue();
-    console.log("Password length:", passwordValue.length);
-
-    console.log("📸 Taking screenshot before submit...");
-    await page.screenshot({ path: "before-submit.png", fullPage: true });
-
-    console.log("🔍 Looking for Sign in button...");
-    const signInButton = page.getByRole("button", { name: "Sign in" });
-    await signInButton.waitFor({ state: "visible", timeout: 10000 });
-
-    // Перевіряємо що кнопка enabled
-    const isEnabled = await signInButton.isEnabled();
-    console.log("Button is enabled:", isEnabled);
-
-    console.log("🖱️ Clicking Sign in button...");
-    await signInButton.click();
-
-    console.log("⏳ Waiting for navigation...");
-    await page.waitForURL((url) => !url.pathname.includes("/login"), {
-      timeout: 20000,
-    });
-
-    console.log("✅ Login successful!");
+    console.log("✅ URL changed to home page");
     console.log("Current URL:", page.url());
 
+    // ВАЖЛИВО: Перевіряємо що ми РЕАЛЬНО залогінені
+    console.log("🔍 Checking if logged in...");
+    
+    // Шукаємо елемент який є тільки для залогінених користувачів
+    const profileLink = page.locator('a[href*="profile"]').first();
+    
+    try {
+      await profileLink.waitFor({ state: "visible", timeout: 5000 });
+      console.log("✅ Profile link found - user is logged in!");
+    } catch (error) {
+      console.error("❌ Profile link NOT found - login failed!");
+      await page.screenshot({ path: "login-failed.png", fullPage: true });
+      throw new Error("Login verification failed - user is not logged in");
+    }
+
+    // Тільки якщо логін успішний - зберігаємо storageState
     console.log("💾 Saving storage state...");
     await context.storageState({ path: "storageState.json" });
-    console.log("✅ Storage state saved!");
+    console.log("✅ Storage state saved successfully");
+
   } catch (error) {
-    console.error("❌ Error:", error);
-    await page.screenshot({ path: "error.png", fullPage: true });
+    console.error("❌ Global setup failed:", error);
+    await page.screenshot({ path: "globalSetup-error.png", fullPage: true });
     console.log("Current URL:", page.url());
-    console.log("Page title:", await page.title());
     throw error;
   } finally {
     await page.waitForTimeout(3000);

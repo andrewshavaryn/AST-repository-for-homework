@@ -2,28 +2,17 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Tests with Storage State", () => {
   
-  test("Should be logged in automatically", async ({ page }) => {
-    // Переходимо на головну сторінку
-    await page.goto("/");
-
-    // Перевіряємо що ми залогінені (є кнопкаProfile або інший індикатор)
-    const profileLink = page.locator('a[href*="profile"]').first();
-    await expect(profileLink).toBeVisible();
-
-    console.log("✅ User is logged in via storage state!");
-  });
-
-  test("Can access protected page without login", async ({ page }) => {
+  test("StorageState-0001- Can access protected page without login", async ({ page }) => {
     // Переходимо на сторінку створення статті (потребує авторизації)
     await page.goto("/editor");
 
     // Перевіряємо що ми на сторінці editor (не редиректнуло на login)
     await expect(page).toHaveURL(/.*editor.*/);
     
-    console.log("✅ Can access protected pages!");
+    console.log("Can access protected pages!");
   });
 
-  test("Can create new article", async ({ page }) => {
+  test("StorageState-0002- Can create new article", async ({ page }) => {
     await page.goto("/editor");
 
     // Заповнюємо форму
@@ -38,6 +27,6 @@ test.describe("Tests with Storage State", () => {
     // Перевіряємо що стаття створена
     await expect(page.locator('h1')).toContainText("Test Article via Storage State");
     
-    console.log("✅ Article created successfully!");
+    console.log("Article created successfully!");
   });
 });

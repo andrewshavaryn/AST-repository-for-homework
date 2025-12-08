@@ -69,7 +69,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://demo.learnwebdriverio.com",
-        storageState: "storageState.json",
+        storageState: undefined,
       },
     },
 
