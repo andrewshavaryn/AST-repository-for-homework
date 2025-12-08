@@ -54,7 +54,10 @@ test.describe("Zara Cookies Tests", () => {
     }
   });
 
-  test("zara, accept cookies", async ({ page, context }) => {
+  test("Work with specific cookie - OptanonConsent", async ({
+    page,
+    context,
+  }) => {
     await page.goto("https://www.zara.com/es/en/");
     await page.getByRole("button", { name: "Accept All Cookies" }).click();
     await page.getByRole("button", { name: "Yes, continue on Spain" }).click();
