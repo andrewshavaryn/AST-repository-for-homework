@@ -35,7 +35,6 @@ export default defineConfig({
     video: "retain-on-failure",
     screenshot: "only-on-failure",
     baseURL: "https://demo.learnwebdriverio.com/",
-    storageState: "storageState.json",
     actionTimeout: 30 * 1000,
     navigationTimeout: 60 * 1000,
   },
@@ -69,7 +68,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://demo.learnwebdriverio.com",
-        storageState: undefined,
+        storageState: "storageState.json",
       },
     },
 
