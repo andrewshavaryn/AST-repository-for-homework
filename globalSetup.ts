@@ -3,9 +3,7 @@ import { chromium, FullConfig } from "@playwright/test";
 async function globalSetup(config: FullConfig) {
   console.log("🚀 Starting global setup...");
 
-  const browser = await chromium.launch({ 
-    headless: false,  // Відкритий браузер щоб бачити що відбувається
-  });
+  const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext();
   const page = await context.newPage();
 
@@ -27,28 +25,18 @@ async function globalSetup(config: FullConfig) {
       timeout: 15000 
     });
 
-    console.log("✅ URL changed to home page");
-    console.log("Current URL:", page.url());
+    console.log("✅ Redirected to home page");
 
-    // ВАЖЛИВО: Перевіряємо що ми РЕАЛЬНО залогінені
-    console.log("🔍 Checking if logged in...");
-    
-    // Шукаємо елемент який є тільки для залогінених користувачів
-    const profileLink = page.locator('a[href*="profile"]').first();
-    
-    try {
-      await profileLink.waitFor({ state: "visible", timeout: 5000 });
-      console.log("✅ Profile link found - user is logged in!");
-    } catch (error) {
-      console.error("❌ Profile link NOT found - login failed!");
-      await page.screenshot({ path: "login-failed.png", fullPage: true });
-      throw new Error("Login verification failed - user is not logged in");
-    }
+    // Перевіряємо що користувач залогінений — шукаємо кнопку "New Article"
+    console.log("🔍 Verifying login...");
+    const newArticleLink = page.locator('a[href="/editor"]');
+    await newArticleLink.waitFor({ state: "visible", timeout: 10000 });
+    console.log("✅ 'New Article' button found - user is logged in!");
 
-    // Тільки якщо логін успішний - зберігаємо storageState
+    // Зберігаємо storageState
     console.log("💾 Saving storage state...");
     await context.storageState({ path: "storageState.json" });
-    console.log("✅ Storage state saved successfully");
+    console.log("✅ Storage state saved to storageState.json");
 
   } catch (error) {
     console.error("❌ Global setup failed:", error);
@@ -56,7 +44,6 @@ async function globalSetup(config: FullConfig) {
     console.log("Current URL:", page.url());
     throw error;
   } finally {
-    await page.waitForTimeout(3000);
     await browser.close();
   }
 
