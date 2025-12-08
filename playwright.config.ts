@@ -134,9 +134,11 @@ export default defineConfig({
     {
       name: "zara",
       testDir: "tests/zara",
+      timeout: 90 * 1000,
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://www.zara.com/es/en/",
+        navigationTimeout: 60 * 1000,
       },
     },
 
