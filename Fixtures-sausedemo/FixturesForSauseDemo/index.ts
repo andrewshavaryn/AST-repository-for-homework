@@ -22,7 +22,7 @@ type AllFixtures = {
   checkoutCompletePage: CheckoutCompletePage;
 
   // Auth
-  standardUser: User; //створити об'єкт Users
+  standardUser: User; //cтворити об'єкт Users
   lockedUser: User;
   problemUser: User;
   performanceGlitchUser: User;
@@ -105,6 +105,18 @@ export const test = base.extend<AllFixtures>({
     await use({ username: "visual_user", password: "secret_sauce" });
   },
 
+  // === AUTH CONFIG ===
+  currentUser: [
+    async ({ standardUser }, use) => {
+      await use(standardUser);
+    },
+    { auto: true },
+  ],
+
+  autoLogin: true,
+
+  autoLogout: false,
+
   // === AUTHENTICATED PAGE ===
   authenticatedPage: async (
     { page, currentUser, autoLogin, autoLogout },
@@ -122,7 +134,7 @@ export const test = base.extend<AllFixtures>({
     // Передаємо сторінку в тест
     await use(page);
 
-    // TEARDOWN: Автологаут (переписати з локаторами) + додати сюди авто-фікстуру
+    // TEARDOWN: Автологаут
     if (autoLogout) {
       await page.click("#react-burger-menu-btn");
       await page.waitForSelector("#logout_sidebar_link", { state: "visible" });

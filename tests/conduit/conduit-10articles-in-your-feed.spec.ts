@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+test.use({ storageState: undefined });
 
 test(
   "ART-0001 Create 10 article and verify that all of them in your feed",
