@@ -15,7 +15,7 @@ export default defineConfig({
   testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: false,
-  //globalSetup: "./globalSetup.ts",
+  globalSetup: "./globalSetup.ts",
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -24,6 +24,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
+  timeout: 90 * 1000, // Додаємо глобальний timeout
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -34,8 +35,9 @@ export default defineConfig({
     video: "retain-on-failure",
     screenshot: "only-on-failure",
     baseURL: "https://demo.learnwebdriverio.com/",
-    //storageState: "storageState.json",
+    storageState: "storageState.json",
     actionTimeout: 30 * 1000,
+    navigationTimeout: 60 * 1000,
   },
 
   /* Configure projects for major browsers */
@@ -47,6 +49,7 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
         baseURL: "https://coffee-cart.app/",
         // testIdAttribute: "data-test",
+        storageState: undefined,
       },
     },
 
@@ -56,6 +59,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://coffee-cart.app/",
+        storageState: undefined,
       },
     },
 
@@ -65,6 +69,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://demo.learnwebdriverio.com",
+        storageState: "storageState.json",
       },
     },
 
@@ -74,6 +79,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://demoqa.com",
+        storageState: undefined,
       },
     },
 
@@ -82,6 +88,7 @@ export default defineConfig({
       testDir: "tests/tests-with-variables",
       use: {
         ...devices["Desktop Chrome"],
+        storageState: undefined,
       },
     },
 
@@ -101,6 +108,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://demoqa.com",
+        storageState: undefined,
       },
     },
 
@@ -110,6 +118,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://....",
+        storageState: undefined,
       },
     },
 
@@ -119,6 +128,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://....",
+        storageState: undefined,
       },
     },
 
@@ -128,6 +138,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://....",
+        storageState: undefined,
       },
     },
 
@@ -140,6 +151,7 @@ export default defineConfig({
         baseURL: "https://www.zara.com/ua/uk/",
         navigationTimeout: 90 * 1000, // 90 секунд на навігацію
         actionTimeout: 30 * 1000,
+        storageState: undefined,
       },
     },
 
