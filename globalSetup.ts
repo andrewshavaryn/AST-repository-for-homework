@@ -14,54 +14,54 @@ async function globalSetup(config: FullConfig) {
     console.log("📝 Going to login page...");
     await page.goto("https://demo.learnwebdriverio.com/login");
 
-    console.log("⏳ Waiting for form...");
-    await page.waitForSelector('form', { timeout: 10000 });
+    console.log("⏳ Waiting for page load...");
+    await page.waitForLoadState("domcontentloaded");
+    await page.waitForTimeout(2000);
 
     console.log("📧 Filling email...");
-    // Пробуємо різні способи заповнення
-    const emailInput = page.locator('input[type="email"]');
-    await emailInput.waitFor({ state: "visible", timeout: 5000 });
-    await emailInput.fill("kante@gmail.com");
+    // Використовуємо getByPlaceholder або getByLabel
+    await page.getByPlaceholder("Email").fill("kante@gmail.com");
 
     console.log("🔑 Filling password...");
-    const passwordInput = page.locator('input[type="password"]');
-    await passwordInput.waitFor({ state: "visible", timeout: 5000 });
-    await passwordInput.fill("test1234");
+    await page.getByPlaceholder("Password").fill("test1234");
 
-    console.log("📸 Taking screenshot before submit...");
-    await page.screenshot({ path: "before-submit.png" });
+    console.log("📸 Screenshot before submit...");
+    await page.screenshot({ path: "before-submit.png", fullPage: true });
 
-    // СПРОБУЄМО БЕЗ КЛІКУ - просто натиснемо Enter
-    console.log("⏎ Pressing Enter...");
-    await passwordInput.press("Enter");
-
-    console.log("⏳ Waiting for navigation...");
-    await page.waitForNavigation({ timeout: 15000 });
+    // Пробуємо знайти кнопку Sign in або Submit
+    console.log("🔍 Looking for button...");
     
-    console.log("✅ Current URL:", page.url());
+    // Спробуємо getByRole
+    const signInButton = page.getByRole("button", { name: /sign in/i });
+    
+    const buttonExists = await signInButton.count();
+    console.log("Button count:", buttonExists);
 
-    // Перевіряємо чи ми на головній
-    if (page.url().includes("/login")) {
-      throw new Error("Still on login page - login failed!");
+    if (buttonExists > 0) {
+      console.log("👆 Clicking Sign In button...");
+      await signInButton.click();
+    } else {
+      console.log("⏎ Button not found, pressing Enter...");
+      await page.getByPlaceholder("Password").press("Enter");
     }
 
-    console.log("✅ Login successful!");
+    console.log("⏳ Waiting for URL change...");
+    await page.waitForURL((url) => !url.pathname.includes("/login"), { 
+      timeout: 15000 
+    });
+    
+    console.log("✅ Login successful! URL:", page.url());
 
     await context.storageState({ path: "storageState.json" });
     console.log("💾 Storage state saved");
 
   } catch (error) {
     console.error("❌ Error:", error);
-    await page.screenshot({ path: "globalSetup-error.png" });
+    await page.screenshot({ path: "error-screenshot.png", fullPage: true });
     console.log("Current URL:", page.url());
-    
-    // Виводимо HTML щоб побачити структуру
-    const html = await page.content();
-    console.log("Page HTML:", html.substring(0, 500));
-    
     throw error;
   } finally {
-    await page.waitForTimeout(5000);
+    await page.waitForTimeout(3000);
     await browser.close();
   }
 
