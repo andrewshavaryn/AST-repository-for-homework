@@ -6,25 +6,27 @@ test.describe("Zara Cookies Tests", () => {
     context,
   }) => {
     // 1. Відкриваємо сайт
-    await page.goto("https://www.zara.com/es/en/");
+    await page.goto("https://www.zara.com");
 
-    // 2. Погоджуємось на всі кукі
-    await page.getByRole("button", { name: "Accept All Cookies" }).click();
-    await page.getByRole("button", { name: "Yes, continue on Spain" }).click();
+    // 2. Чекаємо і клікаємо на cookie button
+    const cookieButton = page.getByRole("button", {
+      name: "Accept All Cookies",
+    });
+    await cookieButton.waitFor({ state: "visible" });
+    await cookieButton.click();
 
     // 3. Отримуємо всі cookies і перевіряємо їх кількість
     const allCookies = await context.cookies();
-    console.log(`Total cookies count: ${allCookies.length}`);
-    console.log("Cookie names:", allCookies.map((c) => c.name).join(", "));
+    console.log(`Загальна кількість cookies: ${allCookies.length}`);
+    console.log("Назви cookies:", allCookies.map((c) => c.name).join(", "));
 
     expect(allCookies.length).toBeGreaterThan(0);
 
     // 4. Змінюємо будь-який cookie на будь-яке значення
     const cookieToModify = allCookies[0];
-    console.log(`Modifying cookie: ${cookieToModify.name}`);
-    console.log(`Original value: ${cookieToModify.value}`);
+    console.log(`Змінюємо cookie: ${cookieToModify.name}`);
+    console.log(`Оригінальне значення: ${cookieToModify.value}`);
 
-    // Змінюємо значення
     const updatedCookies = allCookies.map((cookie) => {
       if (cookie.name === cookieToModify.name) {
         cookie.value = "modified_test_value_12345";
@@ -32,17 +34,15 @@ test.describe("Zara Cookies Tests", () => {
       return cookie;
     });
 
-    // Очищаємо і додаємо оновлені cookies
     await context.clearCookies();
     await context.addCookies(updatedCookies);
 
-    // Перевіряємо, що cookie змінився
     const finalCookies = await context.cookies();
     const modifiedCookie = finalCookies.find(
       (c) => c.name === cookieToModify.name
     );
 
-    console.log(`New value: ${modifiedCookie?.value}`);
+    console.log(`Нове значення: ${modifiedCookie?.value}`);
     expect(modifiedCookie?.value).toBe("modified_test_value_12345");
   });
 
@@ -50,9 +50,8 @@ test.describe("Zara Cookies Tests", () => {
     page,
     context,
   }) => {
-    await page.goto("https://www.zara.com/es/en/");
+    await page.goto("/");
     await page.getByRole("button", { name: "Accept All Cookies" }).click();
-    await page.getByRole("button", { name: "Yes, continue on Spain" }).click();   
 
     // Шукаємо конкретний cookie (OptanonConsent)
     const cookies = await context.cookies();
