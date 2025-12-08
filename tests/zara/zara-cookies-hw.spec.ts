@@ -1,93 +1,93 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Zara Cookies Tests", () => {
-  test("Cookies-0001 - Accept cookies, verify count and modify cookie value", async ({
+  test("Cookies-0001 - Accept cookies, verify count and modify cookie", async ({
     page,
     context,
   }) => {
     // 1. Відкриваємо сайт
     await page.goto("https://www.zara.com/es/en/");
 
-    // 2. Погоджуємось на всі cookies
-    // Чекаємо появи cookie banner і клікаємо "Accept All"
+    // 2. Погоджуємось на всі кукі
     await page.getByRole("button", { name: "Accept All Cookies" }).click();
     await page.getByRole("button", { name: "Yes, continue on Spain" }).click();
 
     // 3. Отримуємо всі cookies і перевіряємо їх кількість
     const allCookies = await context.cookies();
     console.log(`Total cookies count: ${allCookies.length}`);
-    console.log(
-      "Cookies:",
-      allCookies.map((c) => c.name)
-    );
+    console.log("Cookie names:", allCookies.map((c) => c.name).join(", "));
 
-    // Перевіряємо, що cookies встановлені (більше 0)
     expect(allCookies.length).toBeGreaterThan(0);
 
     // 4. Змінюємо будь-який cookie на будь-яке значення
-    // Візьмемо перший cookie і змінимо його значення
-    if (allCookies.length > 0) {
-      const cookieToModify = allCookies[0];
-      console.log(`Modifying cookie: ${cookieToModify.name}`);
-      console.log(`Original value: ${cookieToModify.value}`);
+    const cookieToModify = allCookies[0];
+    console.log(`Modifying cookie: ${cookieToModify.name}`);
+    console.log(`Original value: ${cookieToModify.value}`);
 
-      // Створюємо модифікований cookie
-      const modifiedCookie = {
-        ...cookieToModify,
-        value: "modified_test_value_12345",
-      };
+    // Змінюємо значення
+    const updatedCookies = allCookies.map((cookie) => {
+      if (cookie.name === cookieToModify.name) {
+        cookie.value = "modified_test_value_12345";
+      }
+      return cookie;
+    });
 
-      // Спочатку видаляємо старий cookie
-      await context.clearCookies({ name: cookieToModify.name });
+    // Очищаємо і додаємо оновлені cookies
+    await context.clearCookies();
+    await context.addCookies(updatedCookies);
 
-      // Додаємо модифікований cookie
-      await context.addCookies([modifiedCookie]);
+    // Перевіряємо, що cookie змінився
+    const finalCookies = await context.cookies();
+    const modifiedCookie = finalCookies.find(
+      (c) => c.name === cookieToModify.name
+    );
 
-      // Перевіряємо, що cookie змінився
-      const updatedCookies = await context.cookies();
-      const updatedCookie = updatedCookies.find(
-        (c) => c.name === cookieToModify.name
-      );
-
-      console.log(`New value: ${updatedCookie?.value}`);
-      expect(updatedCookie?.value).toBe("modified_test_value_12345");
-    }
+    console.log(`New value: ${modifiedCookie?.value}`);
+    expect(modifiedCookie?.value).toBe("modified_test_value_12345");
   });
 
-  test("Work with specific cookie - OptanonConsent", async ({
+  test("Cookies-0002 - Work with specific cookie - OptanonConsent", async ({
     page,
     context,
   }) => {
     await page.goto("https://www.zara.com/es/en/");
     await page.getByRole("button", { name: "Accept All Cookies" }).click();
-    await page.getByRole("button", { name: "Yes, continue on Spain" }).click();
+    await page.getByRole("button", { name: "Yes, continue on Spain" }).click();   
 
-    // Приймаємо cookies
-    await page.getByRole("button", { name: "Accept All Cookies" }).click();
-    await page.getByRole("button", { name: "Yes, continue on Spain" }).click();
-
-    // Шукаємо конкретний cookie (наприклад, OptanonConsent)
+    // Шукаємо конкретний cookie (OptanonConsent)
     const cookies = await context.cookies();
+    console.log("All cookies:", cookies.map((c) => c.name).join(", "));
+
     const consentCookie = cookies.find((c) => c.name === "OptanonConsent");
 
     if (consentCookie) {
-      console.log("OptanonConsent cookie found:", consentCookie.value);
+      console.log("OptanonConsent cookie found");
+      console.log("Original value:", consentCookie.value);
 
       // Змінюємо його значення
-      await context.clearCookies({ name: "OptanonConsent" });
-      await context.addCookies([
-        {
-          ...consentCookie,
-          value: "custom_consent_value",
-        },
-      ]);
+      const updatedCookies = cookies.map((cookie) => {
+        if (cookie.name === "OptanonConsent") {
+          cookie.value = "custom_consent_value";
+        }
+        return cookie;
+      });
+
+      await context.clearCookies();
+      await context.addCookies(updatedCookies);
 
       // Перевіряємо зміну
-      const updatedCookies = await context.cookies();
-      const updatedConsent = updatedCookies.find(
+      const cookiesAfterUpdate = await context.cookies();
+      const updatedConsent = cookiesAfterUpdate.find(
         (c) => c.name === "OptanonConsent"
       );
+
+      console.log("Updated value:", updatedConsent?.value);
       expect(updatedConsent?.value).toBe("custom_consent_value");
+    } else {
+      console.warn("OptanonConsent cookie not found!");
+      console.log("Available cookies:", cookies.map((c) => c.name).join(", "));
+      // Тест не падає, просто попереджаємо
+      test.skip(true, "OptanonConsent cookie not found on the page");
     }
   });
 });

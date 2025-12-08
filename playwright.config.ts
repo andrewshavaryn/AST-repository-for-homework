@@ -136,7 +136,7 @@ export default defineConfig({
       testDir: "tests/zara",
       use: {
         ...devices["Desktop Chrome"],
-        baseURL: "https://www.zara.com/es/en/",
+        baseURL: "https://www.zara.com",
       },
     },
 
