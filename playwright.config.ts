@@ -47,8 +47,6 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: "https://coffee-cart.app/",
-        // testIdAttribute: "data-test",
-        storageState: undefined,
       },
     },
 
@@ -67,7 +65,7 @@ export default defineConfig({
       testDir: "tests/conduit",
       use: {
         ...devices["Desktop Chrome"],
-        baseURL: "https://demo.learnwebdriverio.com",
+        baseURL: process.env.BASEURL,
         //storageState: "storageState.json",
       },
     },
