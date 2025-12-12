@@ -1,4 +1,5 @@
 import test, { expect } from "@playwright/test";
+import { test } from "../../base_fixture";
 
 /**
  * Цей файл демонструє, як використовувати API запити в Playwright для отримання токена аутентифікації.

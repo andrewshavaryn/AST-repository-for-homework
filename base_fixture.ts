@@ -1,5 +1,5 @@
 import { test as base, request, Page } from "@playwright/test";
-import { access, readFile, appendFile } from "fs/promises";
+import { access, readFile, writeFile } from "fs/promises";
 
 /**
  * Цей файл визначає кастомну тестову фікстуру, використовуючи Playwright test.extend.
@@ -57,7 +57,7 @@ export const test = base.extend<MyFixture>({
           process.env.BASEURL_API + "/api/users/login",
           {
             data: {
-              user: { email, password: "test1234" },
+              user: { email, password: process.env.TEST_USER_PASSWORD },
             },
             failOnStatusCode: true,
           }
@@ -66,14 +66,14 @@ export const test = base.extend<MyFixture>({
         const responseBody = await response.json();
         token = responseBody.user.token;
 
-        await appendFile(defaultTokenPath, token);
+        await writeFile(defaultTokenPath, token);
       }
     } else {
       const response = await requestContext.post(
         process.env.BASEURL_API + "/api/users/login",
         {
           data: {
-            user: { email, password: "test1234" },
+            user: { email, password: process.env.TEST_USER_PASSWORD},
           },
           failOnStatusCode: true,
         }
@@ -82,12 +82,11 @@ export const test = base.extend<MyFixture>({
       const responseBody = await response.json();
       token = responseBody.user.token;
 
-      await appendFile(defaultTokenPath, token);
+      await writeFile(defaultTokenPath, token);
     }
 
     await use(createStorageState(token));
   },
-  
 
   /*
   Фікстура 'before' діє як хук beforeEach.
