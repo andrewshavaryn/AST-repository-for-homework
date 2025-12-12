@@ -1,14 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
-import dotenv from 'dotenv';
-import path from 'path';
-dotenv.config({ path: path.resolve(__dirname, '.env') });
-
+import dotenv from "dotenv";
+import path from "path";
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -36,7 +34,7 @@ export default defineConfig({
     trace: "on",
     video: "retain-on-failure",
     screenshot: "only-on-failure",
-    baseURL: "https://demo.learnwebdriverio.com/",
+    baseURL: process.env.BASEURL,
     actionTimeout: 30 * 1000,
     navigationTimeout: 60 * 1000,
   },
