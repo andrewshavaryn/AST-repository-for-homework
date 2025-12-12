@@ -1,4 +1,4 @@
-import test, { expect } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { test } from "../../base_fixture";
 
 /**
@@ -31,13 +31,13 @@ fetch("https://conduit-api.learnwebdriverio.com/api/users/login", {
 // Тест на реєстрацію нового користувача та отримання токена
 test("get auth token", async ({ request }) => {
   const response = await request.post(
-    "https://conduit-api.learnwebdriverio.com/api/users",
+    "/api/users",
     {
       data: {
         user: {
-          email: "kante073@gmail.com",
+          email: "kante074@gmail.com",
           password: "test1234",
-          username: "kante3",
+          username: "kante4",
         },
       },
       failOnStatusCode: true,
