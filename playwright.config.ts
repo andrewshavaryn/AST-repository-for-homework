@@ -66,7 +66,7 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         baseURL: process.env.BASEURL,
-        //storageState: "storageState.json",
+        storageState: "storageState.json",
       },
     },
 
