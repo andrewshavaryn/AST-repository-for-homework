@@ -7,15 +7,18 @@ import { test, expect } from "@playwright/test";
 
 //http client
 // Тест на реєстрацію нового користувача та отримання токена
-test("API-0001 - get auth token", async ({ request }) => {
+test("API-0001 - Register unique user and get auth token", async ({
+  request,
+}) => {
+  const timestamp = Date.now().toString().slice(-8);
+  const uniqueUser = {
+    username: `user${timestamp}`,
+    email: `testuser_${Date.now()}@test.com`,
+    password: process.env.TEST_USER_PASSWORD!,
+  };
+
   const response = await request.post(process.env.BASEURL_API + "/api/users", {
-    data: {
-      user: {
-        email: "kante076@gmail.com",
-        password: "test1234",
-        username: "kante6",
-      },
-    },
+    data: { user: uniqueUser },
     failOnStatusCode: true,
   });
 
@@ -25,6 +28,8 @@ test("API-0001 - get auth token", async ({ request }) => {
   console.log(token);
 
   expect(token).toBeTruthy();
+
+  console.log("User created successfully!");
 });
 
 // Тест на логін існуючого користувача та отримання токена
@@ -35,8 +40,8 @@ test("API-0002 - Login and get auth token", async ({ request }) => {
     {
       data: {
         user: {
-          email: "kante072@gmail.com",
-          password: "test1234",
+          email: process.env.TEST_USER_EMAIL!,
+          password: process.env.TEST_USER_PASSWORD!,
         },
       },
       failOnStatusCode: true,

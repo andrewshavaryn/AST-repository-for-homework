@@ -3,23 +3,6 @@ import dotenv from "dotenv";
 import path from "path";
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-console.log("\n🔍 Checking environment variables:");
-console.log("Path to .env:", path.resolve(__dirname, ".env"));
-console.log("TEST_USER_EMAIL:", process.env.TEST_USER_EMAIL);
-console.log(
-  "TEST_USER_PASSWORD:",
-  process.env.TEST_USER_PASSWORD ? "***" : "undefined"
-);
-console.log("BASEURL:", process.env.BASEURL);
-console.log("BASEURL_API:", process.env.BASEURL_API);
-console.log("---\n");
-
-// Перевірка
-if (!process.env.TEST_USER_EMAIL || !process.env.TEST_USER_PASSWORD) {
-  console.error("❌ TEST_USER_EMAIL or TEST_USER_PASSWORD not loaded!");
-  process.exit(1);
-}
-
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
