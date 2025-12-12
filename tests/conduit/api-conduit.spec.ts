@@ -1,5 +1,4 @@
-import { expect } from "@playwright/test";
-import { test } from "../../base_fixture";
+import { test, expect } from "@playwright/test";
 
 /**
  * Цей файл демонструє, як використовувати API запити в Playwright для отримання токена аутентифікації.
@@ -29,15 +28,15 @@ fetch("https://conduit-api.learnwebdriverio.com/api/users/login", {
 
 //http client
 // Тест на реєстрацію нового користувача та отримання токена
-test("get auth token", async ({ request }) => {
+test("API-0001 - get auth token", async ({ request }) => {
   const response = await request.post(
-    "/api/users",
+    process.env.BASEURL_API + "/api/users",
     {
       data: {
         user: {
-          email: "kante074@gmail.com",
+          email: "kante076@gmail.com",
           password: "test1234",
-          username: "kante4",
+          username: "kante6",
         },
       },
       failOnStatusCode: true,
@@ -51,8 +50,6 @@ test("get auth token", async ({ request }) => {
 
   expect(token).toBeTruthy();
 });
-
-
 
 // Тест на логін існуючого користувача та отримання токена
 test("login and get auth token", async ({ request }) => {

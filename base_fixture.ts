@@ -73,7 +73,7 @@ export const test = base.extend<MyFixture>({
         process.env.BASEURL_API + "/api/users/login",
         {
           data: {
-            user: { email, password: process.env.TEST_USER_PASSWORD},
+            user: { email, password: process.env.TEST_USER_PASSWORD },
           },
           failOnStatusCode: true,
         }
@@ -126,7 +126,6 @@ export const test = base.extend<MyFixture>({
     { auto: false, title: "executing after test are finished" },
   ],
 });
-
 
 async function isFileExist(path: string): Promise<boolean> {
   try {
