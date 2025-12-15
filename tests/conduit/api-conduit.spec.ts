@@ -3,6 +3,8 @@ import { test, expect } from "@playwright/test";
 // Змінна для зберігання slug статті між тестами
 let articleSlug: string;
 let authToken: string;
+let testUserEmail: string;
+let testUserPassword: string;
 
 /**
  * Цей файл демонструє, як використовувати API запити в Playwright для отримання токена аутентифікації.
@@ -10,25 +12,40 @@ let authToken: string;
  */
 
 //http client
+
 test.describe.serial("Conduit API - Articles CRUD", () => {
-  // Перед усіма тестами - логін та отримання токена
+  // Створюємо нового користувача перед всіма тестами
   test.beforeAll(async ({ request }) => {
+    const timestamp = Date.now();
+    testUserEmail = `testuser_${timestamp}@test.com`;
+    testUserPassword = "Test123456!"; // або process.env.TEST_USER_PASSWORD!
+
+    const newUser = {
+      username: `user${timestamp}`,
+      email: testUserEmail,
+      password: testUserPassword,
+    };
+
+    console.log("Creating new user:", testUserEmail);
+
     const response = await request.post(
-      `${process.env.BASEURL_API}/api/users/login`,
+      `${process.env.BASEURL_API}/api/users`,
       {
-        data: {
-          user: {
-            email: process.env.TEST_USER_EMAIL!,
-            password: process.env.TEST_USER_PASSWORD!,
-          },
-        },
+        data: { user: newUser },
       }
     );
+
+    // Перевіряємо чи успішно створився користувач
+    if (!response.ok()) {
+      const errorBody = await response.text();
+      console.error("Registration failed:", response.status(), errorBody);
+      throw new Error(`Registration failed: ${response.status()}`);
+    }
 
     const body = await response.json();
     authToken = body.user.token;
 
-    console.log("Logged in, token received");
+    console.log("User created successfully, token received");
   });
 
   // Тест на реєстрацію нового користувача та отримання токена
@@ -62,37 +79,41 @@ test.describe.serial("Conduit API - Articles CRUD", () => {
 
   // Тест на логін існуючого користувача та отримання токена
   test("API-0002 - Login and get auth token", async ({ request }) => {
-    // Відправляємо POST запит на логін
+    // Логінимося з користувачем, створеним в beforeAll
     const response = await request.post(
       process.env.BASEURL_API + "/api/users/login",
       {
         data: {
           user: {
-            email: process.env.TEST_USER_EMAIL!,
-            password: process.env.TEST_USER_PASSWORD!,
+            email: testUserEmail, // Використовуємо email з beforeAll
+            password: testUserPassword, // Використовуємо password з beforeAll
           },
         },
-        failOnStatusCode: true,
+        failOnStatusCode: false, // Щоб побачити детальну помилку
       }
     );
+
+    // Перевіряємо статус
+    if (!response.ok()) {
+      const errorBody = await response.text();
+      console.error("Login failed:", response.status(), errorBody);
+    }
+
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
     const token = responseBody.user.token;
 
-    console.log(token);
+    console.log("Login token:", token);
 
     expect(token).toBeTruthy();
 
     // Чекаємо 3 секунди (просто для демонстрації)
     await new Promise((r) => setTimeout(r, 3000));
 
-    //   await page.waitForTimeout(3000);
-
-    // Отримуємо поточний стан сховища (cookies, local storage) з контексту запиту
+    // Отримуємо поточний стан сховища
     const storageState = await request.storageState();
     console.log(storageState);
-
-    console.log("");
   });
 
   test("API-0003 - Create new article", async ({ request }) => {
