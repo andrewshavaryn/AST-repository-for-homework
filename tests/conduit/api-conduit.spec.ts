@@ -18,7 +18,7 @@ test.describe.serial("Conduit API - Articles CRUD", () => {
   test.beforeAll(async ({ request }) => {
     const timestamp = Date.now();
     testUserEmail = `testuser_${timestamp}@test.com`;
-    testUserPassword = "Test123456!"; // або process.env.TEST_USER_PASSWORD!
+    testUserPassword = "Test123456!";
 
     const newUser = {
       username: `user${timestamp}`,
@@ -85,11 +85,11 @@ test.describe.serial("Conduit API - Articles CRUD", () => {
       {
         data: {
           user: {
-            email: testUserEmail, // Використовуємо email з beforeAll
-            password: testUserPassword, // Використовуємо password з beforeAll
+            email: testUserEmail, 
+            password: testUserPassword, 
           },
         },
-        failOnStatusCode: false, // Щоб побачити детальну помилку
+        failOnStatusCode: false,
       }
     );
 
