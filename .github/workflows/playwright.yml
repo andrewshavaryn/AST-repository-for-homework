@@ -1,5 +1,7 @@
 name: Playwright Tests
 on:
+  push:
+    branches: [AST/my-remote-branch, main]
   pull_request:
     branches: [main]
   schedule:
